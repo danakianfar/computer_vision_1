@@ -13,7 +13,8 @@ out_avg = sum(input_image, 3)/3;
 % luminosity method
 out_lum = 0.21 * R + 0.72 * G + 0.07*B;
 
-% built-in MATLAB function 
+% built-in MATLAB function uses Rec.ITU-R BT.601-7
+% performs 0.299 * R + 0.587 * G + 0.114 * B 
 out_matlab = rgb2gray(input_image);
 
 end
