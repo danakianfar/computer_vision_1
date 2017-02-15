@@ -1,9 +1,8 @@
-function [out_light, out_avg ,out_lum ,out_matlab] = rgb2grays(input_image)
+function [out_light, out_avg, out_lum, out_matlab] = rgb2grays(input_image)
 % converts an RGB into grayscale by using 4 different methods
 input_image = double(input_image)/255; % Converts to double for numerical stability
 
 [R,G,B] = getColorChannels(input_image);
-imshow(R);
 
 % lightness method
 out_light = 0.5 * (min(input_image, [], 3) + max(input_image, [], 3)); 
