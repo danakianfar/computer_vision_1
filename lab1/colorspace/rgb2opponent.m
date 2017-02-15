@@ -1,7 +1,7 @@
 function [output_image] = rgb2opponent(input_image)
 % converts an RGB image into opponent color space
 
-input_image = double(input_image)/255; % Converts to double for numerical stability
+input_image = double(input_image); % Converts to double for numerical stability
 
 [R,G,B] = getColorChannels(input_image);
 

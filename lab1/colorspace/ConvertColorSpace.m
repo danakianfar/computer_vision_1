@@ -28,7 +28,8 @@ elseif strcmp(colorspace, 'ycbcr')
     % use the built-in function
     new_image = rgb2ycbcr(input_image);
 elseif strcmp(colorspace, 'gray')
-    new_image = rgb2grays(input_image); % fill in this function
+    [out_light, out_avg, out_lum, out_matlab] = rgb2grays(input_image); % fill in this function
+    new_image = {out_light, out_avg, out_lum, out_matlab};
 else
 % if user inputs an unknow colorspace just notify and do not plot anything
     fprintf('Error: Unknown colorspace type [%s]...\n',colorspace);
@@ -36,6 +37,11 @@ else
     return;
 end
 
-visualize(new_image); % fill in this function
+if strcmp(colorspace, 'gray')
+    visualize(out_light, out_avg, out_lum, out_matlab, ...
+        {'lightness', 'average', 'luminosity', 'matlab'});
+else
+    visualize(new_image, {colorspace});
+end
 
 end

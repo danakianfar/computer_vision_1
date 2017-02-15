@@ -1,7 +1,7 @@
 function [output_image] = rgb2normedrgb(input_image)
 % converts an RGB image into normalized rgb
 
-input_image = double(input_image)/255; % Converts to double for numerical stability
+input_image = double(input_image); % Converts to double for numerical stability
 
 [R,G,B] = getColorChannels(input_image);
 
