@@ -11,9 +11,9 @@ function [ dpdy, dqdx ] = check_integrability( p, q )
 % TODO: Your code goes here
 % approximate derivate by neighbor difference
 
-[~, dpdy] = imgradientxy(p, 'intermediate');
+[~, dpdy] = gradient(p); %imgradientxy(p, 'intermediate');
 
-[dqdx, ~] = imgradientxy(q, 'intermediate');
+[dqdx, ~] = gradient(q); %imgradientxy(q, 'intermediate');
 
 disp(norm((dpdy - dqdx).^2))
 end

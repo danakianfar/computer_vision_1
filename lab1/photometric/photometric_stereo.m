@@ -30,14 +30,15 @@ title('Albedo');
 height_map = construct_surface( p, q, W, H );
 
 subplot(2, 2, 3);
-[X_sub, Y_sub] = meshgrid(1:32:512, 1:32:512);  
-surf(X_sub, Y_sub, height_map(1:32:end, 1:32:end));
+step_size = 32;
+[X_sub, Y_sub] = meshgrid(1:step_size:512, 1:step_size:512);  
+surf(X_sub, Y_sub, height_map(1:step_size:end, 1:step_size:end));
 xlabel('x'),ylabel('y'),zlabel('z');
 title('Surface Mesh');
 
-[U, V, W] = surfnorm(X_sub, Y_sub, height_map(1:32:end, 1:32:end));
+[U, V, W] = surfnorm(X_sub, Y_sub, height_map(1:step_size:end, 1:step_size:end));
 subplot(2, 2, 4), 
-quiver3(X_sub, Y_sub, height_map(1:32:end, 1:32:end), U, V, W, 0.5);
+quiver3(X_sub, Y_sub, height_map(1:step_size:end, 1:step_size:end), U, V, W, 0.5);
 xlabel('x'),ylabel('y'),zlabel('z');
 title('Surface normals');
     

@@ -42,10 +42,10 @@ else
 end
 
 if strcmp(colorspace, 'gray')
-    visualize(out_light, out_avg, out_lum, out_matlab, ...
-        {'lightness', 'average', 'luminosity', 'matlab'});
+    visualize(out_light, out_avg, out_lum, out_matlab, input_image, ...
+        {'lightness', 'average', 'luminosity', 'matlab', 'original'});
 else
-    visualize(new_image(:,:,1), new_image(:,:,2), new_image(:,:,3), labels);
+    visualize(new_image(:,:,1), new_image(:,:,2), new_image(:,:,3), input_image, [labels {'Original'}]);
 end
 
 end
