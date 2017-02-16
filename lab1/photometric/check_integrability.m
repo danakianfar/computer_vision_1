@@ -15,7 +15,5 @@ function [ dpdy, dqdx ] = check_integrability( p, q )
 
 [dqdx, ~] = imgradientxy(q, 'intermediate');
 
-disp(norm((dpdy + dqdx).^2));
-
+disp(norm((dpdy - dqdx).^2))
 end
-

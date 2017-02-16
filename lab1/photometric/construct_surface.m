@@ -14,9 +14,9 @@ height_map = zeros(W, H);
 %   height_value = previous_height_value + corresponding_q_value
 
 
-
-
-
+for h = 2:H
+    height_map(h,1) =  height_map(h-1,1) + q(h,1);
+end
 
 % TODO: Your code goes here
 % for each row
@@ -24,7 +24,11 @@ height_map = zeros(W, H);
 %       height_value = previous_height_value + corresponding_p_value
 
 
-
+for h = 1:H
+    for w = 2:W
+        height_map(h,w) =  height_map(h,w-1) + p(h,w);
+    end
+end
 
 
 end

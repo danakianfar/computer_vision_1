@@ -41,8 +41,8 @@ for w = 1:W
         g = pinv(scriptI * scriptV) * (scriptI * i);
         albedo(w,h) = norm(g);
         normal(w,h,:) = g / albedo(w,h);
-        p(w,h) = normal(w,h,1) / normal(w,h,3);
-        q(w,h) = normal(w,h,2) / normal(w,h,3);
+        p(w,h) = -normal(w,h,1) / normal(w,h,3);
+        q(w,h) = -normal(w,h,2) / normal(w,h,3);
     end
 end
 

@@ -1,4 +1,4 @@
-close all, clear, clc
+clear, clc
 
 % obtain many images in a fixed view under different illumination
 [image_stack, W, H] = load_image();
@@ -14,22 +14,20 @@ q(isnan(q)) = 0;
 % integrability check: is (dp / dy  -  dq / dx) ^ 2 small everywhere?
 [dpdy, dqdx] = check_integrability(p, q);
 
-%%
-
-% compute the surface height
-height_map = construct_surface( p, q, W, H );
-
 % plot the results
 figure(1) 
 subplot(2, 2, 1);
 [X, Y] = meshgrid(1:512, 1:512);
-sqdiff = (dpdy + dqdx).^2;
+sqdiff = (dpdy - dqdx).^2;
 surf(X, Y, sqdiff, gradient(sqdiff));
 title('Integrability check: (dp / dy - dq / dx) ^2 ');
 
 subplot(2, 2, 2);
 imshow(albedo);
 title('Albedo');
+
+% compute the surface height
+height_map = construct_surface( p, q, W, H );
 
 subplot(2, 2, 3);
 [X_sub, Y_sub] = meshgrid(1:32:512, 1:32:512);  
