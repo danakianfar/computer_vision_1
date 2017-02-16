@@ -5,15 +5,17 @@ function [ dpdy, dqdx ] = check_integrability( p, q )
 %   dpdy : second derivative dp / dy
 %   dqdx : second derviative dq / dx
 
-dpdy = zeros(size(p, 1), size(p, 2));
-dqdx = zeros(size(q, 1), size(q, 2));
+%dpdy = zeros(size(p, 1), size(p, 2));
+%dqdx = zeros(size(q, 1), size(q, 2));
 
 % TODO: Your code goes here
 % approximate derivate by neighbor difference
 
+[~, dpdy] = imgradientxy(p, 'intermediate');
 
+[dqdx, ~] = imgradientxy(q, 'intermediate');
 
-
+disp(norm((dpdy + dqdx).^2));
 
 end
 
