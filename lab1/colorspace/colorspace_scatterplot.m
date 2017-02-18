@@ -1,9 +1,13 @@
+
+% Plots the pixels after transformation from RGB to another colorspace. 
 function colorspace_scatterplot(colorspace, reference_img, axes_labels, plot_label)
     % Get 3 different channels
     A = colorspace(:,:,1);
     B = colorspace(:,:,2);
     C = colorspace(:,:,3);
 
+    % Get RGB colors of image. Flattens the first 2 dims of image, to get a
+    % vector of RGB triples
     colors = double(reshape(reference_img,[],size(reference_img,3),1)); % normalized reshaped image
 
     %#projection on the X-Z plane

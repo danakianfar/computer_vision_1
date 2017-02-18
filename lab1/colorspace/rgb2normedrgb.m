@@ -5,7 +5,7 @@ input_image = double(input_image); % Converts to double for numerical stability
 
 [R,G,B] = getColorChannels(input_image);
 
-norm_factor = R + G + B;
+norm_factor = R + G + B; % intensity
 
 normed_R = R ./ norm_factor;
 
