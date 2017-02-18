@@ -25,23 +25,21 @@ q = zeros(W, H);
 
 % TODO: Your code goes here
 % for each point in the image array
-%   stack image values into a vector i
-%   construct the diagonal matrix scriptI
-%   solve scriptI * scriptV * g = scriptI * i to obtain g for this point
-%   albedo at this point is |g|
-%   normal at this point is g / |g|
-%   p at this point is N1 / N3
-%   q at this point is N2 / N3
-
-
 for w = 1:W
     for h = 1:H
+        %   stack image values into a vector i
         i = reshape(stack_images(w,h,:),n_images,1);
+        %   construct the diagonal matrix scriptI
         scriptI = diag(i);
+        %   solve scriptI * scriptV * g = scriptI * i to obtain g for this point
         g = pinv(scriptI * scriptV) * (scriptI * i);
+        %   albedo at this point is |g|
         albedo(w,h) = norm(g);
+        %   normal at this point is g / |g|
         normal(w,h,:) = g / albedo(w,h);
+        %   p at this point is N1 / N3
         p(w,h) = -normal(w,h,1) / normal(w,h,3);
+        %   q at this point is N2 / N3
         q(w,h) = -normal(w,h,2) / normal(w,h,3);
     end
 end
