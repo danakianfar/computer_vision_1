@@ -17,7 +17,7 @@ imshow(im1)
 title('Original')
 
 for i = 1:n_box
-    box_results{i} = denoise(rgb2gray(im1), 'box', box_sizes(i));
+    box_results{i} = denoise_d(rgb2gray(im1), 'box', box_sizes(i));
     subplot(1, n_box + 1, i+1)
     imshow(box_results{i})
     title(strcat('K=' , num2str(2*i+1)))
@@ -36,7 +36,7 @@ imshow(im1)
 title('Original')
 
 for i = 1:n_median
-    median_results{i} = denoise(rgb2gray(im1), 'median', median_sizes(i));
+    median_results{i} = denoise_d(rgb2gray(im1), 'median', median_sizes(i));
     subplot(1, n_median + 1, i+1)
     imshow(median_results{i})
     title(strcat('K=' , num2str(2*i+1)))
@@ -55,3 +55,47 @@ end
 input = imread('../Images/input.png');
 reference = imread('../Images/reference.png');
 out = myHistMatching(input, reference);
+
+%% Exercise 2.3
+
+im1 = imread('../Images/image3.jpeg');
+[w,h,c] = size(im1);
+
+[Gx, Gy, grad_magnitude , grad_direction ] = compute_gradient( im1 );
+
+subplot(2, 2, 1)
+imshow(Gx)
+title('Gradient x-direction')
+
+subplot(2, 2, 2)
+imshow(Gy)
+title('Gradient y-direction')
+
+subplot(2, 2, 3)
+imshow(grad_magnitude)
+title('Gradient magnitude')
+
+step_size = 1;
+subplot(2, 2, 4)
+[X_sub, Y_sub] = meshgrid(1:step_size:h, 1:step_size:w);  
+quiver(X_sub, -Y_sub, cos(grad_direction) .* (grad_direction ~= 0), sin(grad_direction) .* (grad_direction ~= 0));
+xlim([1 w])
+ylim([-h -1])
+title('Gradient direction')
+
+%% Exercise 2.4
+
+im1 = imread('../Images/image4.jpeg');
+[details, imout] = unsharp(im1, 5, 100, 5);
+
+figure, subplot(1,3,1), imshow(im1), title('Original');
+subplot(1,3,2), imshow(details), title('Image Fine Details');
+subplot(1,3,3), imshow(imout), title('Unsharped Filter Result');
+
+%% Exercise 2.5
+
+im1 = imread('../Images/image1.png');
+imout = compute_LoG (im1, 'method3', 1, 1, 1.6);
+
+figure, subplot(1,2,1), imshow(im1), title('Original');
+subplot(1,2,2), imshow(imout), title('Image Fine Details');
