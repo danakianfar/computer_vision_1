@@ -54,22 +54,29 @@ im1 = imread('../Images/image3.jpeg');
 
 subplot(2, 2, 1), imshow(Gx), title('Gradient x-direction')
 subplot(2, 2, 2), imshow(Gy), title('Gradient y-direction')
-subplot(2, 2, 3) ,imshow(grad_magnitude), title('Gradient magnitude')
-subplot(2, 2, 4)
+subplot(2, 2, 3:4) , imshowpair(grad_magnitude, grad_direction, 'montage') ,title('Gradient magnitude & Direction')
 
-step_size = 1;
-[X_sub, Y_sub] = meshgrid(1:step_size:h, 1:step_size:w);  
-quiver(X_sub, -Y_sub, cos(grad_direction) .* (grad_direction ~= 0), sin(grad_direction) .* (grad_direction ~= 0));
-xlim([1 w]), ylim([-h -1]), title('Gradient direction')
+% step_size = 1;
+% [X_sub, Y_sub] = meshgrid(1:step_size:h, 1:step_size:w);  
+% quiver(X_sub, -Y_sub, cos(grad_direction) .* (grad_direction ~= 0), sin(grad_direction) .* (grad_direction ~= 0));
+% xlim([1 w]), ylim([-h -1]), title('Gradient direction')
 
 %% Exercise 2.4
 
 im1 = imread('../Images/image4.jpeg');
-[details, imout] = unsharp(im1, 5, 100, 5);
+K = [1,2,5,10];
+sigma = [3,5,10,20];
+kernel_size = [5,10,50,100] ;
 
-figure, subplot(1,3,1), imshow(im1), title('Original');
-subplot(1,3,2), imshow(details), title('Image Fine Details');
-subplot(1,3,3), imshow(imout), title('Unsharped Filter Result');
+for k =1:numel(K)
+    for s = 1:numel(sigma)
+        [details, imout] = unsharp(im1, sigma(s), kernel_size(s), K(k));
+        figure('Position', [10,10, 900, 500]), subplot(1,3,1), imshow(im1), title('Original');
+        subplot(1,3,2), imshow(details), title(sprintf('Fine Details k=%d, s=%d, %n=%d',K(k),sigma(s),kernel_size(s)));
+        subplot(1,3,3), imshow(imout), title(sprintf('Unsharpened k=%d, s=%d, %n=%d',K(k),sigma(s),kernel_size(s)));
+        print(sprintf('./figs/unsharpen_k=%d, s=%d, %n=%d',K(k),sigma(s),kernel_size(s)),'-dpng');
+    end
+end
 
 %% Exercise 2.5
 

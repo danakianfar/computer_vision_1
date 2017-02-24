@@ -14,5 +14,6 @@ function [ Gx, Gy, grad_magnitude , grad_direction ] = compute_gradient( image )
     
     % Applies atan to find the gradient direction
     grad_direction = atan2(-Gy,Gx)*180/pi;
-    
+   
+    % imshow pair on grad direction and grad magnitude
 end
