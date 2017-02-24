@@ -12,34 +12,23 @@ box_sizes = [1, 2, 3, 4];
 n_box = length(box_sizes);
 box_results = {n_box};
 
-subplot(1, n_box + 1, 1)
-imshow(im1)
-title('Original')
+figure, subplot(1, n_box + 1, 1), imshow(im1), title('Original')
 
 for i = 1:n_box
-    box_results{i} = denoise_d(rgb2gray(im1), 'box', box_sizes(i));
-    subplot(1, n_box + 1, i+1)
-    imshow(box_results{i})
-    title(strcat('K=' , num2str(2*i+1)))
+    box_results{i} = denoise(rgb2gray(im1), 'box', box_sizes(i));
+    subplot(1, n_box + 1, i+1), imshow(box_results{i}), title(strcat('K=' , num2str(2*i+1)))
 end
 
 % Median filters
 
-figure
-
 median_sizes = [1, 2, 3];
 n_median = length(median_sizes);
 median_results = {n_median};
-
-subplot(1, n_median + 1, 1)
-imshow(im1)
-title('Original')
+figure, subplot(1, n_median + 1, 1), imshow(im1), title('Original')
 
 for i = 1:n_median
-    median_results{i} = denoise_d(rgb2gray(im1), 'median', median_sizes(i));
-    subplot(1, n_median + 1, i+1)
-    imshow(median_results{i})
-    title(strcat('K=' , num2str(2*i+1)))
+    median_results{i} = denoise(rgb2gray(im1), 'median', median_sizes(i));
+    subplot(1, n_median + 1, i+1), imshow(median_results{i}), title(strcat('K=' , num2str(2*i+1)))
 end
 
 % In this case, box performs better due to the properties of the noise
@@ -63,25 +52,15 @@ im1 = imread('../Images/image3.jpeg');
 
 [Gx, Gy, grad_magnitude , grad_direction ] = compute_gradient( im1 );
 
-subplot(2, 2, 1)
-imshow(Gx)
-title('Gradient x-direction')
-
-subplot(2, 2, 2)
-imshow(Gy)
-title('Gradient y-direction')
-
-subplot(2, 2, 3)
-imshow(grad_magnitude)
-title('Gradient magnitude')
+subplot(2, 2, 1), imshow(Gx), title('Gradient x-direction')
+subplot(2, 2, 2), imshow(Gy), title('Gradient y-direction')
+subplot(2, 2, 3) ,imshow(grad_magnitude), title('Gradient magnitude')
+subplot(2, 2, 4)
 
 step_size = 1;
-subplot(2, 2, 4)
 [X_sub, Y_sub] = meshgrid(1:step_size:h, 1:step_size:w);  
 quiver(X_sub, -Y_sub, cos(grad_direction) .* (grad_direction ~= 0), sin(grad_direction) .* (grad_direction ~= 0));
-xlim([1 w])
-ylim([-h -1])
-title('Gradient direction')
+xlim([1 w]), ylim([-h -1]), title('Gradient direction')
 
 %% Exercise 2.4
 

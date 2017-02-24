@@ -4,7 +4,7 @@ function imout = denoise(image, kernel_type, kernel_size)
     
     % Add padding to get same size
     pad = floor(kernel_size/2);
-    img = padarray(double(image), [pad pad] , 'replicate', 'both');
+    img = padarray(im2double(image), [pad pad] , 'replicate', 'both');
     
     imout = zeros(size(img));
     
