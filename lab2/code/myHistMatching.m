@@ -2,12 +2,12 @@ function imOut = myHistMatching(input, reference)
     imOut = hist_matching(input, reference);
     
     figure;
-    subplot(2,3,1), imshow(input), title('Input');
-    subplot(2,3,2), imshow(reference), title('Reference');
-    subplot(2,3,3), imshow(imOut), title('Transformed');
-    subplot(2,3,4), histogram(input,256), title('Input Histogram');
-    subplot(2,3,5), histogram(reference,256), title('Reference Histogram');
-    subplot(2,3,6), histogram(imOut,256), title('Transformed Histogram');
+    subplot(2,3,1), imshow(input), title('Input', 'FontSize', 15);
+    subplot(2,3,2), imshow(reference), title('Reference', 'FontSize', 15);
+    subplot(2,3,3), imshow(imOut), title('Transformed', 'FontSize', 15);
+    subplot(2,3,4), histogram(input,256), title('Input Histogram', 'FontSize', 15);
+    subplot(2,3,5), histogram(reference,256), title('Reference Histogram', 'FontSize', 15);
+    subplot(2,3,6), histogram(imOut,256), title('Transformed Histogram', 'FontSize', 15);
 end
 
 function out = hist_matching(im1, im2)
