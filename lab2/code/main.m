@@ -49,7 +49,7 @@ figure , imshowpair(grad_magnitude, grad_direction, 'montage') ,title('Gradient 
 
 im1 = imread('../Images/image4.jpeg');
 K = [1,2,5,10];
-sigma = [1,2,5,10,20];
+sigma = [1,2,5,20];
 kernel_size = [1,5,10,60] ;
 
 for k =1:numel(K)
