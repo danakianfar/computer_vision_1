@@ -1,13 +1,14 @@
 function imout = denoise(image, kernel_type, kernel_size)
     
-    kernel_size = 2 * kernel_size + 1;
+    kernel_size = 2 * kernel_size + 1; % odd kernel width
     
     % Add padding to get same size
     pad = floor(kernel_size/2);
-    img = padarray(im2double(image), [pad pad] , 'replicate', 'both');
+    img = padarray(im2double(image), [pad pad] , 'replicate', 'both'); % 
     
     imout = zeros(size(img));
     
+    % Define filters
     if strcmp(kernel_type,'median')
         f = @(x) median(x(:));
     elseif strcmp(kernel_type,'box') 
