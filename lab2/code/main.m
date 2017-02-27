@@ -82,8 +82,12 @@ end
 
 %% Exercise 2.5
 
-im1 = imread('../Images/image1.png');
-imout = compute_LoG (im1, 'method3', 1, 1, 1.6);
+im1 = rgb2gray(imread('../Images/image1.png'));
+out1 = compute_LoG (im1, 'method1', 2, 0.5, 0.5);
+out2 = compute_LoG (im1, 'method2', 2, 0.5, -1);
+out3 = compute_LoG (im1, 'method3', 2, 1.2, 0.75);
 
-figure, subplot(1,2,1), imshow(im1), title('Original');
-subplot(1,2,2), imshow(imout), title('Image Fine Details');
+figure, subplot(2,2,1), imshow(im1), title('Original');
+subplot(2,2,2), imshow(out1, []), title('Method 1 - \sigma_1 = 0.5 - \alpha = 0.5');
+subplot(2,2,3), imshow(out2, []), title('Method 2 - \sigma_1 = 0.5');
+subplot(2,2,4), imshow(out3, []), title('Method 3 - \sigma_1 = 1.2 - \sigma_2 = 0.75');

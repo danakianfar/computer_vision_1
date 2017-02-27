@@ -1,3 +1,4 @@
+
 function [ Gx, Gy, grad_magnitude , grad_direction ] = compute_gradient( image )
     
     image = double(image);
