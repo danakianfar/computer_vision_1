@@ -24,6 +24,20 @@ subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'r.', 'Marker
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 
 %% Lucas Kanade
+clear, clc
+
+I1 = imread('../sphere1.ppm');
+I2 = imread('../sphere2.ppm');
+
+n = 15;
+K = 10;
+sigma = 1.5;
+
+[U, V, X, Y] = opticalflow(I1, I2, n, K, sigma);
+
+figure, imshow(I1); hold on; quiver(Y, X, U, V);
+
+%% Tracking
 
 clear, clc
 

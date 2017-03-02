@@ -1,6 +1,13 @@
-function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
-
+function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
+    
     window_width = floor(n/2);
+
+    if nargin < 7
+        tmp_x=[window_width:n:size(image1,1)];
+        tmp_y=[window_width:n:size(image1,2)];
+        X = repmat(tmp_x, 1, numel(tmp_y));
+        Y = kron(tmp_y, ones(1,numel(tmp_x)));
+    end
     
     % Convert images to double and grayscale
     I1 = rgb2gray(im2double(image1));
@@ -25,11 +32,6 @@ function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
     Iy = imfilter(I1, Gy, 'replicate', 'same', 'conv');
     It = I1 - I2; % assume time gap is 1
     
-    % To center a block upon an interest point, create a mask of indices
-    % corresponding to the 
-    %blocks = cell(1, numel(X));
-    %mask = reshape(1:numel(I1), size(I1));
-    
     % For each interest point, create a region mask
     for i_x=1:length(X)
         
@@ -49,4 +51,7 @@ function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
         u(i_x) = uv(1);
         v(i_x) = uv(2); 
     end 
+    
+    X = X-n;
+    Y = Y-n;
 end

@@ -35,7 +35,7 @@ function applyflow(folder, ext, vfname, flow_N, K, sigma, threshold, harris_N)
             [ ~, X, Y, ~, ~] = harris(rgb2gray(im2double(image1)), K, sigma, threshold, harris_N);
             
             % Apply optical flow to im1 im2
-            [ U, V ] = opticalflow(image1, image2, Y, X, flow_N, K, sigma);
+            [ U, V , ~, ~] = opticalflow(image1, image2, flow_N, K, sigma, Y, X);
             
             % Display current frame
             imshow(image1);
