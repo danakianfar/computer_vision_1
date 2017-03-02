@@ -27,16 +27,16 @@ figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%
 
 clear, clc
 
-folder = '../pingpong/';
-ext = 'jpeg';
+folder = '../person_toy/';
+ext = 'jp';
 
-sigma = 1; 
-K = 5; 
+sigma = 1.2; 
+K = 9; 
 
 harris_N = 15; 
 threshold = 5e-6; 
 
-flow_N = 15;
+flow_N = 25;
 
 vfname = './v1.avi';
 

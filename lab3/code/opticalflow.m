@@ -1,8 +1,16 @@
 function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
+
+    window_width = floor(n/2);
+    
     % Convert images to double and grayscale
     I1 = rgb2gray(im2double(image1));
     I2 = rgb2gray(im2double(image2));
-    [size_x, size_y] = size(I1);
+    
+    % pad array and shift interest points
+    I1 = padarray(I1, [n n]);
+    I2 = padarray(I2, [n n]);
+    X = X+n;
+    Y = Y+n;
     
     % Initialize u and v vectors
     u = zeros(size(X));
@@ -24,21 +32,15 @@ function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
     
     % For each interest point, create a region mask
     for i_x=1:length(X)
+        
         x = X(i_x); % x-cor of interest point
         y = Y(i_x); % y-cor of interest point
-%         m  = zeros(n,n); % block around interest point (zero-padded if necessary)
         
-        % Identify size of non-zero region (if the interest point is at the corners of the image)
-        t_x = min(floor(n/2), x-1); % num of non-zero elems top of interest point
-        b_x = min(floor(n/2), size_x - x); % num of non-zero elems bottom of interest point
-        r_y = min(floor(n/2), size_y - y); % num of non-zero elems right of interest point
-        l_y = min(floor(n/2), y -1);% num of non-zero elems left of interest point
+        % neighborhood around interest point
+        x_ind = repmat([x - window_width : x + window_width], 1, n);
+        y_ind = kron([y - window_width: y + window_width], ones(1,n));
         
-        idx = [x - t_x : x + b_x, y - l_y : y + r_y];
-        
-%         m() = {mask(x-t_x:x+b_x, y-l_y:y+r_y)}; % assign non-zero regions
-%         blocks(i_x) = {m};
-%         idx = cell2mat(blocks(i));
+        idx = sub2ind(size(I1), x_ind, y_ind);
         
         A = [reshape(Ix(idx),[],1) reshape(Iy(idx),[],1)];
         b = reshape(It(idx),[],1);
