@@ -26,7 +26,7 @@ function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
     for i_x=1:length(X)
         x = X(i_x); % x-cor of interest point
         y = Y(i_x); % y-cor of interest point
-        m  = zeros(n,n); % block around interest point (zero-padded if necessary)
+%         m  = zeros(n,n); % block around interest point (zero-padded if necessary)
         
         % Identify size of non-zero region (if the interest point is at the corners of the image)
         t_x = min(floor(n/2), x-1); % num of non-zero elems top of interest point
@@ -34,7 +34,7 @@ function [u, v] = opticalflow(image1, image2, X, Y, n, K, sigma)
         r_y = min(floor(n/2), size_y - y); % num of non-zero elems right of interest point
         l_y = min(floor(n/2), y -1);% num of non-zero elems left of interest point
         
-        idx = [1:1+t_x+b_x, 1:1+l_y,r_y];
+        idx = [x - t_x : x + b_x, y - l_y : y + r_y];
         
 %         m() = {mask(x-t_x:x+b_x, y-l_y:y+r_y)}; % assign non-zero regions
 %         blocks(i_x) = {m};
