@@ -10,8 +10,13 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
     end
     
     % Convert images to double and grayscale
-    I1 = rgb2gray(im2double(image1));
-    I2 = rgb2gray(im2double(image2));
+    if size(image1,3) > 1
+        I1 = rgb2gray(im2double(image1));
+        I2 = rgb2gray(im2double(image2));
+    else
+        I1 = im2double(image1);
+        I2 = im2double(image2);
+    end
     
     % pad array and shift interest points
     I1 = padarray(I1, [n n]);

@@ -40,7 +40,8 @@ function applyflow(folder, ext, vfname, flow_N, K, sigma, threshold, harris_N)
             % Display current frame
             imshow(image1);
             hold on
-            plot(X, Y, 'r.');
+            
+            plot(X, Y, 'r.')
             
             % Plot vectors
             quiver(X, Y, U, V);

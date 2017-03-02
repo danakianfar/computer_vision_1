@@ -1,8 +1,10 @@
 %% Computer Vision 1 
-% Lab 3: Edge Detection and Motion Tracking
+% Lab 3: Corner Detection and Motion Tracking
 % Authors: Dana Kianfar - Jose Gallego
 
 %% Harris Corner Detector
+clear, clc, close all
+
 % I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
 I = imread('../person_toy/00000001.jpg'); lab='toy';
 
@@ -24,39 +26,55 @@ subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'r.', 'Marker
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 
 %% Lucas Kanade
-clear, clc
+clear, clc, close all
 
+% Load images
 I1 = imread('../sphere1.ppm');
 I2 = imread('../sphere2.ppm');
 
+%I1 = imread('../synth1.pgm');
+%I2 = imread('../synth2.pgm');
+
+% Set up parameters
 n = 15;
 K = 10;
 sigma = 1.5;
 
+% Execute optical flow on evenly spread points at the image with non
+% overlapping regions
 [U, V, X, Y] = opticalflow(I1, I2, n, K, sigma);
 
-figure, imshow(I1); hold on; quiver(Y, X, U, V);
+% Display the found velocity vectors in a video like manner
+figure
+for i=1:40
+    imshow(I1);
+    hold on
+    scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
+    quiver(Y, X, U, V, 'b')
+    getframe;
+    imshow(I2)
+    getframe;
+end
 
 %% Tracking
+clear, clc, close all
 
-clear, clc
-
-folder = '../person_toy/';
+% Set up director name and extension
+folder = '../pingpong/';
 ext = 'jp';
 
+% Parameters for Optical Flow
 sigma = 1.2; 
 K = 9; 
-
 harris_N = 15; 
 threshold = 5e-6; 
-
 flow_N = 25;
 
+% File to store the video
 vfname = './v1.avi';
 
+% Execute optical flow on features
 applyflow(folder, ext, vfname, flow_N, K, sigma, threshold, harris_N);
 
+% Show generated video
 viewvideo(vfname);
-
-%% Tracking
-
