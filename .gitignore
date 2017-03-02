@@ -3,6 +3,9 @@
 ## We have git for backups!
 ##---------------------------------------------------
 
+# Stuff
+.avi
+
 # Windows default autosave extension
 *.asv
 
