@@ -1,5 +1,5 @@
 function imOut = myHistMatching(input, reference)
-    imOut = hist_matching2(input, reference);
+    imOut = hist_matching(input, reference);
     
     figure;
     subplot(2,3,1), imshow(input), title('Input', 'FontSize', 15);
@@ -41,10 +41,14 @@ function out = hist_matching2(im1, im2)
     % of the reference image. Produces a matrix of differences
     differences = abs(bsxfun(@minus, kron(cdf1, ones(1,numel(cdf1))) , cdf2'));
 
-    % Find minimum difference between cdfs. indices i are a mapping from
-    % one cdf to another
+    % Find minimum difference between cdfs.
+    % Indices i are a mapping from image cdf to reference cdf
     [~,i] = min(differences');
-
-    out = i(double(im1)+1)-1; % increment to get recover RGB trips
+    
+    % Map CDFs
+    out = zeros(size(im1));
+    for map_idx=1:256
+        out(im1 == map_idx-1) = i(map_idx)-1;  % correction done to convert [1 256] interval of indixes to [0 255] RGB values
+    end
 end
 
