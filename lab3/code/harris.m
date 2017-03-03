@@ -14,7 +14,7 @@ function [ H, r, c, Ix, Iy] = harris(I, K, sigma, R, N)
     C = imfilter(Iy .* Iy , G, 'replicate','same',  'conv');
     
     % Calculates 'cornerness'
-    H = (A .* C) - (B .^ 2) - 0.04 * (A + C) .^ 2;
+    H = (A .* C) - (B .^ 2) - 0.06 * (A + C) .^ 2;
     
     % Threshold values
     H = H .* double(H > R); 
