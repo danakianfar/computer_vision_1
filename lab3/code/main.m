@@ -5,7 +5,7 @@
 %% Harris Corner Detector
 clear, clc, close all
 
-% I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+%I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
 I = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
@@ -15,25 +15,25 @@ sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less de
 K = 5; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
 % Non-Maximal Supression and Threshold
-N = 15; % neighborhood window size (converted to 2N+1)
-threshold = 5e-6; % threshold for minimum R value
+N = 7; % neighborhood window size (converted to 2N+1)
+threshold = 7e-6; % threshold for minimum R value
 
 [ H, r, c, Ix, Iy] = harris(I, K, sigma, threshold, N);
 corners = corner(I); % MATLAB default
 
-figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'r.', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.6f, s=%d, k=%d', 2*N+1, threshold, sigma, K), 'FontSize', 7);
-subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'r.', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
+figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.6f, s=%d, k=%d', 2*N+1, threshold, sigma, K), 'FontSize', 7);
+subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 
 %% Lucas Kanade
 clear, clc, close all
 
 % Load images
-I1 = imread('../sphere1.ppm');
-I2 = imread('../sphere2.ppm');
+%I1 = imread('../sphere1.ppm');
+%I2 = imread('../sphere2.ppm');
 
-%I1 = imread('../synth1.pgm');
-%I2 = imread('../synth2.pgm');
+I1 = imread('../synth1.pgm');
+I2 = imread('../synth2.pgm');
 
 % Set up parameters
 n = 15;
@@ -46,13 +46,15 @@ sigma = 1.5;
 
 % Display the found velocity vectors in a video like manner
 figure
-for i=1:40
+for i=1:50
     imshow(I1);
     hold on
     scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
     quiver(Y, X, U, V, 'b')
     getframe;
+    pause(0.1)
     imshow(I2)
+    scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
     getframe;
 end
 
