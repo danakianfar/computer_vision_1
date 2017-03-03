@@ -1,13 +1,13 @@
 function imOut = myHistMatching(input, reference)
-    imOut = hist_matching(input, reference);
+    imOut = hist_matching2(input, reference);
     
     figure;
     subplot(2,3,1), imshow(input), title('Input', 'FontSize', 15);
     subplot(2,3,2), imshow(reference), title('Reference', 'FontSize', 15);
-    subplot(2,3,3), imshow(imOut), title('Transformed', 'FontSize', 15);
-    subplot(2,3,4), histogram(input,256), title('Input Histogram', 'FontSize', 15);
-    subplot(2,3,5), histogram(reference,256), title('Reference Histogram', 'FontSize', 15);
-    subplot(2,3,6), histogram(imOut,256), title('Transformed Histogram', 'FontSize', 15);
+    subplot(2,3,3), imshow(imOut, []), title('Transformed', 'FontSize', 15);
+    subplot(2,3,4), histogram(input,256), xlim([0,256]), title('Input Histogram', 'FontSize', 15);
+    subplot(2,3,5), histogram(reference,256), xlim([0,256]), title('Reference Histogram', 'FontSize', 15);
+    subplot(2,3,6), histogram(imOut,256), xlim([0,256]), title('Transformed Histogram', 'FontSize', 15);
 end
 
 function out = hist_matching(im1, im2)
@@ -30,5 +30,21 @@ end
 %// Now apply the mapping to get first image to make
 %// the image look like the distribution of the second image
 out = M(double(im1)+1); % increment to get recover RGB trips
+end
+
+function out = hist_matching2(im1, im2)
+    % Compute CDF of both images
+    cdf1 = cumsum(imhist(im1)) / numel(im1); 
+    cdf2 = cumsum(imhist(im2)) / numel(im2);
+
+    % compute differences between each item in cdf of image, and the entire cdf
+    % of the reference image. Produces a matrix of differences
+    differences = abs(bsxfun(@minus, kron(cdf1, ones(1,numel(cdf1))) , cdf2'));
+
+    % Find minimum difference between cdfs. indices i are a mapping from
+    % one cdf to another
+    [~,i] = min(differences');
+
+    out = i(double(im1)+1)-1; % increment to get recover RGB trips
 end
 

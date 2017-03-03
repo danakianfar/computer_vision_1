@@ -60,7 +60,7 @@ end
 clear, clc, close all
 
 % Set up director name and extension
-folder = '../pingpong/';
+folder = '../person_toy/';
 ext = 'jp';
 
 % Parameters for Optical Flow
