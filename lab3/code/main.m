@@ -33,17 +33,16 @@ autoArrangeFigures(); uistack(1);
 clear, clc, close all
 
 % Load images
-%I1 = imread('../sphere1.ppm');
-%I2 = imread('../sphere2.ppm');
+I1 = imread('../sphere1.ppm');
+I2 = imread('../sphere2.ppm');
 
-I1 = imread('../synth1.pgm');
-I2 = imread('../synth2.pgm');
+% I1 = imread('../synth1.pgm');
+% I2 = imread('../synth2.pgm');
 
 % Set up parameters
-n = 5;
+n = 15;
 K = 9;
-sigma = 2;
-threshold_constant = 1.5; % threshold scaling constant
+sigma = 1;
 
 % Execute optical flow on evenly spread points at the image with non
 % overlapping regions
@@ -67,7 +66,8 @@ end
 clear, clc, close all
 
 % Set up director name and extension
-folder = '../pingpong/';
+% folder = '../pingpong/';
+folder = '../person_toy/';
 ext = 'jp';
 
 % Parameters for Optical Flow
