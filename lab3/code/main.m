@@ -3,28 +3,32 @@
 % Authors: Dana Kianfar - Jose Gallego
 
 %% Harris Corner Detector
-clear, clc, close all
+clear, clc, 
 
-%I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+% I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
 I = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
 I = rgb2gray(im2double(I));
 
+% Gradient and smoothing
 sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
 K = 5; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
-% Non-Maximal Supression and Threshold
-N = 7; % neighborhood window size (converted to 2N+1)
-threshold = 7e-6; % threshold for minimum R value
+alpha = 0.06; % Cornerness map constant
 
-[ H, r, c, Ix, Iy] = harris(I, K, sigma, threshold, N);
+% Non-Maximal Supression and Threshold
+N = 25; % neighborhood window size (converted to 2N+1)
+threshold_constant = 2; % threshold scaling constant
+
+[ H, r, c, Ix, Iy, threshold] = harris(I, K, sigma, threshold_constant, N, alpha);
+
 corners = corner(I); % MATLAB default
 
 figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.6f, s=%d, k=%d', 2*N+1, threshold, sigma, K), 'FontSize', 7);
 subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
-figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
-
+% figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
+autoArrangeFigures(); uistack(1);
 %% Lucas Kanade
 clear, clc, close all
 
@@ -69,14 +73,14 @@ ext = 'jp';
 sigma = 1.2; 
 K = 9; 
 harris_N = 15; 
-threshold = 5e-6; 
+threshold_constant = 1.2; 
 flow_N = 25;
 
 % File to store the video
 vfname = './v1.avi';
 
 % Execute optical flow on features
-applyflow(folder, ext, vfname, flow_N, K, sigma, threshold, harris_N);
+applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N);
 
 % Show generated video
 viewvideo(vfname);
