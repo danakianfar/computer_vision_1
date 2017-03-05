@@ -1,5 +1,5 @@
 %% Computer Vision 1 
-% Lab 3: Corner Detection and Motion Tracking
+% Lab 3: Corner Detection, Optical Flow and Tracking
 % Authors: Dana Kianfar - Jose Gallego
 
 %% Harris Corner Detector
@@ -29,6 +29,7 @@ figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hol
 subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 autoArrangeFigures(); uistack(1);
+
 %% Lucas Kanade
 clear, clc, close all
 
@@ -36,13 +37,13 @@ clear, clc, close all
 I1 = imread('../sphere1.ppm');
 I2 = imread('../sphere2.ppm');
 
-% I1 = imread('../synth1.pgm');
-% I2 = imread('../synth2.pgm');
+%I1 = imread('../synth1.pgm');
+%I2 = imread('../synth2.pgm');
 
 % Set up parameters
-n = 15;
-K = 9;
-sigma = 1;
+n = 15; % Size of non-overlapping regions.
+K = 9; % Gaussian kernel width.
+sigma = 1; % Gaussian kernel sigma
 
 % Execute optical flow on evenly spread points at the image with non
 % overlapping regions
@@ -66,12 +67,12 @@ end
 clear, clc, close all
 
 % Set up director name and extension
-% folder = '../pingpong/';
-folder = '../person_toy/';
+folder = '../pingpong/';
+%folder = '../person_toy/';
 ext = 'jp';
 
 % Parameters for Optical Flow
-sigma = 2; 
+sigma = 1; 
 K = 9; 
 harris_N = 5; 
 threshold_constant = 1.5; 
