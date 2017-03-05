@@ -32,7 +32,7 @@ function applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, ha
             image2 = imread(strcat(folder, files(i+1).name));
             
             % Find features using the Harris corner detector
-            [ ~, X, Y, ~, ~, threshold] = harris(rgb2gray(im2double(image1)), K, sigma, threshold_constant, harris_N);
+            [ ~, X, Y, ~, ~, ~] = harris(rgb2gray(im2double(image1)), K, sigma, threshold_constant, harris_N);
             
             % Apply optical flow to im1 im2
             [ U, V , ~, ~] = opticalflow(image1, image2, flow_N, K, sigma, Y, X);
@@ -44,12 +44,14 @@ function applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, ha
             plot(X, Y, 'r.')
             
             % Plot vectors
-            quiver(X, Y, U, V);
+            quiver(X, Y, U, V, 0.5);
+            drawnow;
             frame = getframe;
             hold off
-            
+             
             writeVideo(outputVideo,frame);
-
+           
+            
         end
     end
     

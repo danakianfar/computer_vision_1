@@ -27,7 +27,7 @@ corners = corner(I); % MATLAB default
 
 figure, subplot(1,2,1), imshow(I1); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
 subplot(1,2,2), imshow(I1); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
-figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
+figure, imshowpair(Ix,Iy, 'montage');  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 autoArrangeFigures(); uistack(1);
 
 %% Lucas Kanade
@@ -66,6 +66,8 @@ end
 %% Tracking
 clear, clc, close all
 
+% Make sure to remove the previous avi to avoid frame size error
+
 % Set up director name and extension
 folder = '../pingpong/';
 %folder = '../person_toy/';
@@ -79,7 +81,7 @@ threshold_constant = 1.5;
 flow_N = 25;
 
 % File to store the video
-vfname = './v1.avi';
+vfname = './ping_pong.avi';
 
 % Execute optical flow on features
 applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N);
