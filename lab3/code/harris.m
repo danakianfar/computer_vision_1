@@ -9,8 +9,8 @@ function [ H, r, c, Ix, Iy, R] = harris(I, K, sigma, threshold_constant, N, alph
 %     [Ix, Iy] = imgradientxy(I, 'sobel');
 
     % Creates a gaussian filter G and its x and y derivatives
-    G = fspecial('gaussian',[K K]);
-    [Gx,Gy] = gradient(G, sigma);
+    G = fspecial('gaussian',[K K], sigma);
+    [Gx,Gy] = gradient(G);
 
     % Calculates the derivatives of the smoothed image
     Ix = imfilter(I, Gx, 'replicate', 'same',  'conv');

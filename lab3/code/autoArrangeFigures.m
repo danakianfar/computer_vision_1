@@ -1,3 +1,4 @@
+% Borrowed from https://nl.mathworks.com/matlabcentral/fileexchange/48480-automatically-arrange-figure-windows
 function autoArrangeFigures(NH, NW, monitor_id)
 % INPUT  :
 %        NH : number of grid of vertical direction
