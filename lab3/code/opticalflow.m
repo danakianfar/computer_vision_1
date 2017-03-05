@@ -29,8 +29,8 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
     v = zeros(size(X));
     
     % Smooth and get gradients
-    G = fspecial('gaussian',[K K]);
-    [Gx,Gy] = gradient(G, sigma);
+    G = fspecial('gaussian',[K K], sigma);
+    [Gx,Gy] = gradient(G);
 
     % Calculates the derivatives of the smoothed image
     Ix = imfilter(I1, Gx, 'replicate', 'same',  'conv');
