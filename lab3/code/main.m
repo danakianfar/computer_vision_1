@@ -5,11 +5,11 @@
 %% Harris Corner Detector
 clear, clc, 
 
-I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
-% I = imread('../person_toy/00000001.jpg'); lab='toy';
+I1 = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+% I1 = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
-I = rgb2gray(im2double(I));
+I = rgb2gray(im2double(I1));
 
 % Gradient and smoothing
 sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
@@ -25,8 +25,8 @@ threshold_constant = 1.5; % threshold scaling constant
 
 corners = corner(I); % MATLAB default
 
-figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
-subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
+figure, subplot(1,2,1), imshow(I1); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
+subplot(1,2,2), imshow(I1); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 autoArrangeFigures(); uistack(1);
 
