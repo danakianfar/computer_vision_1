@@ -15,11 +15,11 @@ I = rgb2gray(im2double(I));
 sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
 K = 5; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
-alpha = 0.06; % Cornerness map constant
+alpha = 0.06; % Cornerness map constant generally 0.04 (more corners) or 0.06 (less corners)
 
 % Non-Maximal Supression and Threshold
-N = 25; % neighborhood window size (converted to 2N+1)
-threshold_constant = 2; % threshold scaling constant
+N = 12; % neighborhood window size (converted to 2N+1)
+threshold_constant = 20; % threshold scaling constant
 
 [ H, r, c, Ix, Iy, threshold] = harris(I, K, sigma, threshold_constant, N, alpha);
 
