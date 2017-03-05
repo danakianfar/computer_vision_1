@@ -5,7 +5,7 @@
 %% Harris Corner Detector
 clear, clc, 
 
-% I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+%I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
 I = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
@@ -18,7 +18,7 @@ K = 5; % Gaussian kernel width. (sigma kept constant) higher width -> more value
 alpha = 0.06; % Cornerness map constant generally 0.04 (more corners) or 0.06 (less corners)
 
 % Non-Maximal Supression and Threshold
-N = 12; % neighborhood window size (converted to 2N+1)
+N = 5; % neighborhood window size (converted to 2N+1)
 threshold_constant = 20; % threshold scaling constant
 
 [ H, r, c, Ix, Iy, threshold] = harris(I, K, sigma, threshold_constant, N, alpha);
@@ -26,18 +26,18 @@ threshold_constant = 20; % threshold scaling constant
 corners = corner(I); % MATLAB default
 
 figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.6f, s=%d, k=%d', 2*N+1, threshold, sigma, K), 'FontSize', 7);
-subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
-% figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
-autoArrangeFigures(); uistack(1);
+%subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
+figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
+%autoArrangeFigures(); uistack(1);
 %% Lucas Kanade
 clear, clc, close all
 
 % Load images
-%I1 = imread('../sphere1.ppm');
-%I2 = imread('../sphere2.ppm');
+I1 = imread('../sphere1.ppm');
+I2 = imread('../sphere2.ppm');
 
-I1 = imread('../synth1.pgm');
-I2 = imread('../synth2.pgm');
+%I1 = imread('../synth1.pgm');
+%I2 = imread('../synth2.pgm');
 
 % Set up parameters
 n = 15;
@@ -50,7 +50,7 @@ sigma = 1.5;
 
 % Display the found velocity vectors in a video like manner
 figure
-for i=1:50
+for i=1:20
     imshow(I1);
     hold on
     scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
