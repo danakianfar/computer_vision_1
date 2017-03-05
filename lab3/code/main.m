@@ -12,23 +12,35 @@ I = imread('../person_toy/00000001.jpg'); lab='toy';
 I = rgb2gray(im2double(I));
 
 % Gradient and smoothing
-sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
-K = 5; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
+sigma = 2; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
+K = 9; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
 alpha = 0.06; % Cornerness map constant generally 0.04 (more corners) or 0.06 (less corners)
 
 % Non-Maximal Supression and Threshold
+<<<<<<< HEAD
 N = 5; % neighborhood window size (converted to 2N+1)
 threshold_constant = 20; % threshold scaling constant
+=======
+N = 50; % neighborhood window size (converted to 2N+1)
+threshold_constant = 1.5; % threshold scaling constant
+>>>>>>> c8988907a7d9fa0ca8309940acd8d696c42336bd
 
 [ H, r, c, Ix, Iy, threshold] = harris(I, K, sigma, threshold_constant, N, alpha);
 
 corners = corner(I); % MATLAB default
 
+<<<<<<< HEAD
 figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.6f, s=%d, k=%d', 2*N+1, threshold, sigma, K), 'FontSize', 7);
 %subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
 figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 %autoArrangeFigures(); uistack(1);
+=======
+figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
+subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
+figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
+autoArrangeFigures(); uistack(1);
+>>>>>>> c8988907a7d9fa0ca8309940acd8d696c42336bd
 %% Lucas Kanade
 clear, clc, close all
 
@@ -40,9 +52,10 @@ I2 = imread('../sphere2.ppm');
 %I2 = imread('../synth2.pgm');
 
 % Set up parameters
-n = 15;
-K = 10;
-sigma = 1.5;
+n = 5;
+K = 9;
+sigma = 2;
+threshold_constant = 1.5; % threshold scaling constant
 
 % Execute optical flow on evenly spread points at the image with non
 % overlapping regions
@@ -66,14 +79,14 @@ end
 clear, clc, close all
 
 % Set up director name and extension
-folder = '../person_toy/';
+folder = '../pingpong/';
 ext = 'jp';
 
 % Parameters for Optical Flow
-sigma = 1.2; 
+sigma = 2; 
 K = 9; 
-harris_N = 15; 
-threshold_constant = 1.2; 
+harris_N = 5; 
+threshold_constant = 1.5; 
 flow_N = 25;
 
 % File to store the video
