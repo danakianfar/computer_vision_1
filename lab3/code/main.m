@@ -5,20 +5,20 @@
 %% Harris Corner Detector
 clear, clc, 
 
-% I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
-I = imread('../person_toy/00000001.jpg'); lab='toy';
+I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+% I = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
 I = rgb2gray(im2double(I));
 
 % Gradient and smoothing
-sigma = 2; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
+sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
 K = 9; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
 alpha = 0.06; % Cornerness map constant generally 0.04 (more corners) or 0.06 (less corners)
 
 % Non-Maximal Supression and Threshold
-N = 50; % neighborhood window size (converted to 2N+1)
+N = 5; % neighborhood window size (converted to 2N+1)
 threshold_constant = 1.5; % threshold scaling constant
 
 [ H, r, c, Ix, Iy, threshold] = harris(I, K, sigma, threshold_constant, N, alpha);
