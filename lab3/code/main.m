@@ -5,14 +5,14 @@
 %% Harris Corner Detector
 clear, clc, 
 
-% I = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
-I = imread('../person_toy/00000001.jpg'); lab='toy';
+I1 = imread('../pingpong/0000.jpeg'); lab='pingpong' ;
+% I1 = imread('../person_toy/00000001.jpg'); lab='toy';
 
 % Convert RGB data to instensity values
-I = rgb2gray(im2double(I));
+I = rgb2gray(im2double(I1));
 
 % Gradient and smoothing
-sigma = 2; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
+sigma = 1; % Gaussian kernel sigma. Higher sigma -> stronger blurring -> less detail, less edges
 K = 9; % Gaussian kernel width. (sigma kept constant) higher width -> more values 
 
 alpha = 0.06; % Cornerness map constant generally 0.04 (more corners) or 0.06 (less corners)
@@ -25,9 +25,9 @@ threshold_constant = 1.5; % threshold scaling constant
 
 corners = corner(I); % MATLAB default
 
-figure, subplot(1,2,1), imshow(I); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
-subplot(1,2,2), imshow(I); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
-figure, imshowpair(Ix,Iy, 'montage' );  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
+figure, subplot(1,2,1), imshow(I1); hold on; plot(r,c,'ro', 'MarkerSize', 5); hold off; title(compose('Corners n=%d, t=%.3E, s=%d, k=%d, alpha=%.E', 2*N+1, threshold, sigma, K, alpha), 'FontSize', 7);
+subplot(1,2,2), imshow(I1); hold on; plot(corners(:,1),corners(:,2),'ro', 'MarkerSize',5); hold off; title('MATLAB corners', 'FontSize', 7); print(char(compose('./figs/corner_%s', lab)),'-depsc');
+figure, imshowpair(Ix,Iy, 'montage');  print(char(compose('./figs/grad_corner_%s', lab)),'-depsc');
 autoArrangeFigures(); uistack(1);
 
 %% Lucas Kanade
@@ -66,23 +66,27 @@ end
 %% Tracking
 clear, clc, close all
 
+% Make sure to remove the previous avi to avoid frame size error
+
 % Set up director name and extension
-folder = '../pingpong/';
-%folder = '../person_toy/';
+%folder = '../pingpong/';
+folder = '../person_toy/';
 ext = 'jp';
 
 % Parameters for Optical Flow
-sigma = 1; 
+sigma = 2; 
 K = 9; 
 harris_N = 5; 
 threshold_constant = 1.5; 
 flow_N = 25;
 
+of_constant = 1;
+
 % File to store the video
-vfname = './v1.avi';
+vfname = './ping_pong.avi';
 
 % Execute optical flow on features
-applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N);
+applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N, of_constant);
 
 % Show generated video
 viewvideo(vfname);
