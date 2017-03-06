@@ -69,22 +69,24 @@ clear, clc, close all
 % Make sure to remove the previous avi to avoid frame size error
 
 % Set up director name and extension
-folder = '../pingpong/';
-%folder = '../person_toy/';
+%folder = '../pingpong/';
+folder = '../person_toy/';
 ext = 'jp';
 
 % Parameters for Optical Flow
-sigma = 1; 
+sigma = 2; 
 K = 9; 
 harris_N = 5; 
 threshold_constant = 1.5; 
 flow_N = 25;
 
+of_constant = 1;
+
 % File to store the video
 vfname = './ping_pong.avi';
 
 % Execute optical flow on features
-applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N);
+applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N, of_constant);
 
 % Show generated video
 viewvideo(vfname);

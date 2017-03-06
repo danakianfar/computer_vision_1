@@ -49,8 +49,8 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
         
         idx = sub2ind(size(I1), x_ind, y_ind);
         
-        A = [reshape(Ix(idx),[],1) reshape(Iy(idx),[],1)];
-        b = reshape(It(idx),[],1);
+        A = [reshape(Ix(floor(idx)),[],1) reshape(Iy(floor(idx)),[],1)];
+        b = reshape(It(floor(idx)),[],1);
         uv = pinv(A'*A) * A'*b;
         
         u(i_x) = uv(1);
