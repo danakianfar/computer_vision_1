@@ -41,7 +41,7 @@ I2 = imread('../sphere2.ppm');
 %I2 = imread('../synth2.pgm');
 
 % Set up parameters
-n = 15; % Size of non-overlapping regions.
+n = 5; % Size of non-overlapping regions.
 K = 9; % Gaussian kernel width.
 sigma = 1; % Gaussian kernel sigma
 
@@ -55,7 +55,7 @@ for i=1:50
     imshow(I1);
     hold on
     scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
-    quiver(Y, X, U, V, 'b')
+    quiver(Y, X, U, V, 'w')
     getframe;
     pause(0.1)
     imshow(I2)
@@ -66,21 +66,21 @@ end
 %% Tracking
 clear, clc, close all
 
+disp('** Dont resize the video! Please wait until the .avi file is generated to look at the video in a larger window size **')
 % Make sure to remove the previous avi to avoid frame size error
 
 % Set up director name and extension
-%folder = '../pingpong/';
-folder = '../person_toy/';
+% folder = '../pingpong/'; sigma = 1; 
+folder = '../person_toy/'; sigma = 2; 
 ext = 'jp';
 
 % Parameters for Optical Flow
-sigma = 2; 
 K = 9; 
 harris_N = 5; 
 threshold_constant = 1.5; 
 flow_N = 25;
 
-of_constant = 1;
+of_constant = 1; % scaling constant for flow vectors
 
 % File to store the video
 vfname = './ping_pong.avi';
