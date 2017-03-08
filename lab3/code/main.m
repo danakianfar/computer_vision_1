@@ -83,7 +83,7 @@ flow_N = 25;
 of_constant = 1;
 
 % File to store the video
-vfname = './ping_pong.avi';
+vfname = '../videos/person_toy.avi';
 
 % Execute optical flow on features
 applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, harris_N, of_constant);
