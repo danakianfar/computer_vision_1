@@ -6,13 +6,24 @@ function [best_W, best_T] = ransac(F1, F2, M, p)
     for n=1:N
        
         % Sample one pair of points from both images
+<<<<<<< HEAD
         rand_sample = randi(length(M),[1, 1]);
         x = F1(1:2, M(1,n))';
         x_ = F2(1:2, M(2,n))';
+=======
+        rand_sample = randi(length(M),[3, 1]);
+        x = F1(1:2, M(1,rand_sample))';
+        x_ = F2(1:2, M(2,rand_sample))';
+>>>>>>> cc98c2b6721cd2606566729404140c656400b979
         
         % Define A and b
-        A = [x(1) x(2) 0 0 1 0 ; 0 0 x(1) x(2) 0 1];
-        b = [x_(1) ; x_(2)];
+        A = zeros(6,6);
+        b = zeros(6,1);
+        
+        for i=1:3
+            A(2*i-1:2*i,:) = [x(i,1) x(i,2) 0 0 1 0 ; 0 0 x(i,1) x(i,2) 0 1];
+            b(2*i-1:2*i) = [x_(i,1) ; x_(i,2)];
+        end
         
         % Solve the linear system for tranformation parameters
         R = (pinv(A) * b)';
@@ -26,6 +37,7 @@ function [best_W, best_T] = ransac(F1, F2, M, p)
         
         % Count inliers
         inliers_count = sum(([1 1] * errors.^2) < 500);
+        
         
         if inliers_count > max_inliers
             fprintf('Num of inliers %d\n', inliers_count);
