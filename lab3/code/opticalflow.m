@@ -2,6 +2,8 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
     
     window_width = floor(n/2);
 
+    % if no interest points are given, distribute them evenly across the
+    % image
     if nargin < 7
         tmp_x=[window_width:n:size(image1,1)];
         tmp_y=[window_width:n:size(image1,2)];
@@ -47,8 +49,9 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
         x_ind = repmat([x - window_width : x + window_width], 1, n);
         y_ind = kron([y - window_width: y + window_width], ones(1,n));
         
-        idx = sub2ind(size(I1), x_ind, y_ind);
+        idx = sub2ind(size(I1), x_ind, y_ind); % convert indices
         
+        % solve linear system
         A = [reshape(Ix(floor(idx)),[],1) reshape(Iy(floor(idx)),[],1)];
         b = reshape(It(floor(idx)),[],1);
         uv = pinv(A'*A) * A'*b;
@@ -57,6 +60,7 @@ function [u, v, X, Y] = opticalflow(image1, image2, n, K, sigma, X, Y)
         v(i_x) = uv(2); 
     end 
     
+    % correction for padding
     X = X-n;
     Y = Y-n;
 end

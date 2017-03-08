@@ -3,10 +3,6 @@ function [ H, r, c, Ix, Iy, R] = harris(I, K, sigma, threshold_constant, N, alph
     if nargin <= 5
        alpha = 0.06; 
     end
-    
-% Sobel kernel
-%     G = fspecial('sobel');
-%     [Ix, Iy] = imgradientxy(I, 'sobel');
 
     % Creates a gaussian filter G and its x and y derivatives
     G = fspecial('gaussian',[K K], sigma);

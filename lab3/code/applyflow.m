@@ -63,8 +63,6 @@ function applyflow(folder, ext, vfname, flow_N, K, sigma, threshold_constant, ha
             hold off
              
             writeVideo(outputVideo,frame);
-           
-            
         end
     end
     
