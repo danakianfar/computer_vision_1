@@ -1,26 +1,29 @@
 function [best_W, best_T] = ransac(F1, F2, M, p)
-
-    N = log(1 - p) / log( 1 - (1 - 0.9) ^ 2)
+    
+    % Number of pairs needed to calculate affine transformation
+    P = 3;
+    
+    % Heuristic value for estimating the necessary number of iterations
+    N = log(1 - p) / log( 1 - (1 - 0.9) ^ 2);
+    
+    % Running max auxiliary variable
     max_inliers = 0;
+    
+    disp('Init RANSAC execution');
     
     for n=1:N
        
         % Sample one pair of points from both images
-<<<<<<< HEAD
-        rand_sample = randi(length(M),[1, 1]);
-        x = F1(1:2, M(1,n))';
-        x_ = F2(1:2, M(2,n))';
-=======
-        rand_sample = randi(length(M),[3, 1]);
+
+        rand_sample = randi(length(M),[P, 1]);
         x = F1(1:2, M(1,rand_sample))';
         x_ = F2(1:2, M(2,rand_sample))';
->>>>>>> cc98c2b6721cd2606566729404140c656400b979
-        
+
         % Define A and b
-        A = zeros(6,6);
-        b = zeros(6,1);
+        A = zeros(2*P,2*P);
+        b = zeros(2*P,1);
         
-        for i=1:3
+        for i=1:P
             A(2*i-1:2*i,:) = [x(i,1) x(i,2) 0 0 1 0 ; 0 0 x(i,1) x(i,2) 0 1];
             b(2*i-1:2*i) = [x_(i,1) ; x_(i,2)];
         end
@@ -38,9 +41,9 @@ function [best_W, best_T] = ransac(F1, F2, M, p)
         % Count inliers
         inliers_count = sum(([1 1] * errors.^2) < 500);
         
-        
+        % If better than current max
         if inliers_count > max_inliers
-            fprintf('Num of inliers %d\n', inliers_count);
+            fprintf('Number of inliers: %d/%d\n', inliers_count, size(M,2));
             max_inliers = inliers_count;
             best_W = W;
             best_T = T;
