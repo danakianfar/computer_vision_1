@@ -18,18 +18,28 @@ right = im2single(imread('./images/boat2.pgm'));
 M = vl_ubcmatch(D1, D2); 
 
 % Randomly sample 50 matches
-rand_sample = randi(length(M),[50, 1]);
+num_matches = 50;
+rand_sample = randi(length(M),[num_matches, 1]);
 f1_selection = F1(:,M(1,rand_sample));
 f2_selection = F2(:,M(2,rand_sample)) + [size(left,2);0;0;0];
 
-figure, imshow([left right]);
-hold on
+figure, imshow([left right]); hold on
 vl_plotframe(f1_selection); % left image
 vl_plotframe(f2_selection); % right image
 
 % Plot random subset of all matching points
-for match = 1:50
-    plot([f1_selection(1,match)' ; f2_selection(1,match)'], [f1_selection(2,match)' ; f2_selection(2,match)'], 'y-')
-end
+plot([f1_selection(1,:) ; f2_selection(1,:)], [f1_selection(2,:) ; f2_selection(2,:)], 'y-')
 
-tform = ransac(F1,F2,M,.95)
+p = 0.95; % confidence
+
+% Do RANSAC to get best match
+[W, T]= ransac(F1, F2, M, p);
+
+figure, imshow([left right]); hold on
+vl_plotframe(f1_selection); % left image
+vl_plotframe(f2_selection); % right image
+
+ransac_keyspoints = W * f1_selection(1:2,:)  + T + [size(left,2);0];
+plot([f1_selection(1,:) ; ransac_keyspoints(1,:)], [f1_selection(2,:) ; ransac_keyspoints(2,:)], 'y-')
+
+
