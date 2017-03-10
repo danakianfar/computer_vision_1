@@ -2,6 +2,10 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
 
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
+    if inverse
+        inverter = [1 -1 ; -1 1];
+        W = W .* inverter;
+    end
     
     [row_num,col_num] = size(X);
     
@@ -24,10 +28,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
         end
     end
     
-    if ~inverse
-        %TODO: the other way around
-        Z = Z;
-    end
+    
     
     %TODO: NN
     Z = medfilt2(Z, [floor(sqrt(neighbours)) floor(sqrt(neighbours))]);
