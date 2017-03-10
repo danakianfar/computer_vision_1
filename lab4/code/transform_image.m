@@ -3,7 +3,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
     if inverse
-        inverter = [1 -1 ; -1 1];
+        inverter = - ones(length(W)) + 2 * eye(length(W));
         W = W .* inverter;
     end
     
