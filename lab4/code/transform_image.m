@@ -1,4 +1,4 @@
-function [ Z ] = transform_image(X, W, neighbours, inverse, interp_fun)
+function [ Z , z_bounds] = transform_image(X, W, neighbours, inverse, interp_fun)
 
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
@@ -42,17 +42,19 @@ function [ Z ] = transform_image(X, W, neighbours, inverse, interp_fun)
     [interp_candidates] = inpoly([candidates_x, candidates_y], corners');
     
     % replace assigned variables by interpolation, or zero if outside image
-    for i=1:numel(interp_candidates)
-        x = candidates_x(i); y = candidates_y(i);
-        
-        if interp_candidates(i)
-            window = Z(max(1,x-nn_window):min(size(Z,1),x+nn_window), ...
-                max(1,y-nn_window):min(size(Z,2),y+nn_window));
-            window = window(:);
-            window = window(window >= 0);
-            Z(x,y) = interp_fun(window);
-        else
-            Z(x,y) = 0;
+    for c=1:n_channels
+        for i=1:numel(interp_candidates)
+            x = candidates_x(i); y = candidates_y(i);
+
+            if interp_candidates(i)
+                window = Z(max(1,x-nn_window):min(size(Z,1),x+nn_window), ...
+                    max(1,y-nn_window):min(size(Z,2),y+nn_window), c);
+                window = window(:);
+                window = window(window >= 0);
+                Z(x,y,c) = interp_fun(window);
+            else
+                Z(x,y,c) = 0;
+            end
         end
     end
 end
