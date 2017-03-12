@@ -67,4 +67,5 @@ im1= im2single(imread('./images/left.jpg'));
 im2 = im2single(imread('./images/right.jpg'));
 
 stitched = stitching(im1, im2);
+figure
 imshow(stitched);

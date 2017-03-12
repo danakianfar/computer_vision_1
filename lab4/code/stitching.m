@@ -15,33 +15,34 @@ end
 % Get the set of supposed matches between region descriptors in each image
 M = vl_ubcmatch(D1, D2); 
 
-% Randomly plot 50 matches
-% [f1_selection, f2_selection] = plot_sample_matches(left, right, M, F1, F2, 50);
- 
 % Execute RANSAC to get best match
 p = 0.95; % confidence
 [W, T]= ransac(F1, F2, M, p);
 
-neighbors = 4;
-[t_image, z_bounds] = transform_image2(im2, W, T, neighbors, false);
+neighbors = 1;
+nn_filt = @(x) mean(x);
+[t_image, z_bounds] = transform_image(im2, W, neighbors, false, nn_filt);
 
-[min_vals, ~ ] = min(z_bounds');
-min_r = min_vals(1);
-min_c = min_vals(2);
-
-[max_vals, ~ ] = max(z_bounds');
-max_r = max_vals(1);
-max_c = max_vals(2);
+%imshow(t_image);
 
 [h,w,n_channels] = size(im1);
 
 x_bounds = [ 1 1 h h; 1 w 1 w];
-w_bounds = [x_bounds, z_bounds - round([T(2) - min(z_bounds(1,:) ); T(1) - min(z_bounds(2,:) )])];
+w_bounds = [x_bounds, z_bounds - round([T(2) - min(z_bounds(1,:)); T(1) - min(z_bounds(2,:))])];
+
+[min_vals, ~ ] = min(w_bounds');
+min_r = min_vals(1);
+min_c = min_vals(2);
+
+[max_vals, ~ ] = max(w_bounds');
+max_r = max_vals(1);
+max_c = max_vals(2);
+
 q_bounds = w_bounds - [min_r; min_c] + 1;
 
 Z = zeros([min(q_bounds(1,:)), min(q_bounds(2,:)), n_channels]);
-Z(q_bounds(1,7) : q_bounds(1,6), q_bounds(2,5) : q_bounds(2,8), :) = t_image;
-Z(q_bounds(1,1) : q_bounds(1,3), q_bounds(2,1) : q_bounds(2,2), :) = im1;
+Z(min(q_bounds(1,5:8)) : max(q_bounds(1,5:8)), min(q_bounds(2,5:8)) : max(q_bounds(2,5:8)), :) = t_image;
+Z(min(q_bounds(1,1:4)) : max(q_bounds(1,1:4)), min(q_bounds(2,1:4)) : max(q_bounds(2,1:4)), :) = im1;
 
 end
 
