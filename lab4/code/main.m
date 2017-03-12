@@ -62,12 +62,19 @@ autoArrangeFigures(); uistack(1);
 %% Transform using MATLAB
 
 tf = maketform('affine', [W ; T']);
-t_image_m = imtransform(right,tf);
+t_image_m = imtransform(im2,tf, 'nearest');
 figure, subplot(1,3,1),imshow(im1), title('Left Image');
 subplot(1,3,2),imshow(t_image_m), title('Right Image Transform with MATLAB');
 subplot(1,3,3), imshow(im2), title('Right Image') ;
 autoArrangeFigures(); uistack(1);
 
+W_inv = W .* (- ones(length(W)) + 2 * eye(length(W)));
+tf_inv = maketform('affine', [W_inv ; T']);
+t_image_m = imtransform(im1,tf_inv, 'nearest');
+figure, subplot(1,3,1),imshow(im1), title('Left Image');
+subplot(1,3,2),imshow(t_image_m), title('Left Image Transform with MATLAB');
+subplot(1,3,3), imshow(im2), title('Right Image') ;
+autoArrangeFigures(); uistack(1);
 
 %% Image Stitching
 
