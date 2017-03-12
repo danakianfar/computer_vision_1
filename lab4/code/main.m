@@ -7,12 +7,15 @@
 
 clear, clc, close all
 
-left = im2single(imread('./images/boat1.pgm'));
-right = im2single(imread('./images/boat2.pgm'));
+left = im2single(imread('./images/left.jpg'));
+right = im2single(imread('./images/right.jpg'));
+
+% left = im2single(imread('./images/boat1.pgm'));
+% right = im2single(imread('./images/boat2.pgm'));
 
 % Detect interest points in each image and their descriptors
-[F1, D1] = vl_sift(left);
-[F2, D2] = vl_sift(right);
+[F1, D1] = vl_sift(rgb2gray(left));
+[F2, D2] = vl_sift(rgb2gray(right));
 
 % Get the set of supposed matches between region descriptors in each image
 M = vl_ubcmatch(D1, D2); 
