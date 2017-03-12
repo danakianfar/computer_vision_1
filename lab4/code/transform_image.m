@@ -1,4 +1,4 @@
-function [ Z ] = transform_image(X, W, T, neighbours, inverse)
+function [ Z ] = transform_image(X, W, T, neighbours, inverse, interp_fun)
 
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
@@ -9,8 +9,9 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
     
     [row_num,col_num, n_channels] = size(X);
     
-    z_bounds = floor(W * [ 1 row_num 1 row_num; 1 1 col_num col_num] + T);
-    
+    % Obtain corners of transformed image
+    z_bounds = floor(W * [ 1  1 row_num row_num; 1 col_num col_num 1] + T);
+
     [min_vals, ~ ] = min(z_bounds');
     min_r = min_vals(1);
     min_c = min_vals(2);
@@ -19,8 +20,10 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
     max_r = max_vals(1);
     max_c = max_vals(2);
     
+    % initialize to -1, so we can track unassigned pixels for interpolation
     Z = -1 * ones([max_r - min_r + 1, max_c - min_c + 1, n_channels]);
     
+    % assign values
     for c=1:col_num
         for r=1:row_num
             tr_pos = floor(W * [r c]' + T) - [ min_r - 1; min_c - 1];
@@ -28,19 +31,28 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
         end
     end 
     
-    nn_window = 1;
+    nn_window = neighbours;
+    % pick candidates for NN interpolation
+    [candidates_x, candidates_y] = ind2sub(size(Z), find(Z < 0));
     
-%    for i=2:size(Z,1)-1
-%        for j=2:size(Z,2)-1
-%            if Z(i,j) == -1 % if unfilled values
-%                 if inpolygon(i,j, z_bounds(1,:), z_bounds(2,:)) %inside the image
-%                     Z(i,j) = mean(mean(Z(i-nn_window:i+nn_window, j-nn_window:j+nn_window)));
-%                 else % the boundaries
-%                     Z(i,j) = 0;
-%                 end
-%            end
-%        end
-%    end    
-    %TODO: NN
-%     Z = medfilt2(Z, [floor(sqrt(neighbours)) floor(sqrt(neighbours))]);
+    corners = [(z_bounds(1,:) - min_r +1); (z_bounds(2,:) - min_c +1)];
+
+
+    % filter candidates for those inside the boundary
+    [interp_candidates] = inpoly([candidates_x, candidates_y], corners');
+    
+    % replace assigned variables by interpolation, or zero if outside image
+    for i=1:numel(interp_candidates)
+        x = candidates_x(i); y = candidates_y(i);
+        
+        if interp_candidates(i)
+            window = Z(max(1,x-nn_window):min(size(Z,1),x+nn_window), ...
+                max(1,y-nn_window):min(size(Z,2),y+nn_window));
+            window = window(:);
+            window = window(window >= 0);
+            Z(x,y) = interp_fun(window);
+        else
+            Z(x,y) = 0;
+        end
+    end
 end

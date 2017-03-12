@@ -38,19 +38,21 @@ p = 0.95; % confidence
 % Plot results
 % plot_ransac_results( left, right, f1_selection, f2_selection, W, T )
 
-%%
-neighbors = 4;
-t_image = transform_image(left, W, T, neighbors, true);
+%% Transform Image
+% Parameters
+neighbors = 1;
+med_filt = @(x) median(x);
+nn_filt = @(x) mean(x);
+interp_fun = med_filt; % selector variable
 
+% Left-to-right
+t_image = transform_image(left, W, T, neighbors, true, med_filt);   
 figure, subplot(1,3,1), imshow(left), title('Left Image');
 subplot(1,3,2), imshow(t_image), title('Left Image Transformed');
 subplot(1,3,3), imshow(right), title('Right Image') ;
 
-%%
-
-neighbors = 4;
+% Right-to-left
 t_image = transform_image(right, W, T, neighbors, false);
-
 figure, subplot(1,3,1),imshow(left), title('Left Image');
 subplot(1,3,2),imshow(t_image), title('Right Image Transformed');
 subplot(1,3,3), imshow(right), title('Right Image') ;
