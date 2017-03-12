@@ -2,6 +2,10 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
 
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
+    if inverse
+        inverter = - ones(length(W)) + 2 * eye(length(W));
+        W = W .* inverter;
+    end
     
     [row_num,col_num] = size(X);
     
@@ -22,12 +26,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
             tr_pos = floor(W * [r c]' + T) - [ min_r - 1; min_c - 1];
             Z(tr_pos(1), tr_pos(2)) = X(r,c);
         end
-    end
-    
-    if ~inverse
-        %TODO: the other way around
-        Z = Z;
-    end
+    end 
     
     
     %TODO: NN

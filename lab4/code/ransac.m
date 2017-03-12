@@ -39,7 +39,7 @@ function [best_W, best_T] = ransac(F1, F2, M, p)
         errors = (W * F1(1:2,M(1,:)) + T) - F2(1:2,M(2,:));
         
         % Count inliers
-        inliers_count = sum(([1 1] * errors.^2) < 500);
+        inliers_count = sum(([1 1] * errors.^2) < 100);
         
         % If better than current max
         if inliers_count > max_inliers

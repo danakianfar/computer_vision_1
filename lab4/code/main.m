@@ -29,19 +29,17 @@ p = 0.95; % confidence
 
 %%
 neighbors = 4;
-t_image = transform_image(left, W, T, neighbors, false);
+t_image = transform_image(left, W, T, neighbors, true);
 
-subplot(1,2,1);
-imshow(t_image);
-subplot(1,2,2);
-imshow(right);
+figure, subplot(1,3,1), imshow(left), title('Left Image');
+subplot(1,3,2), imshow(t_image), title('Left Image Transformed');
+subplot(1,3,3), imshow(right), title('Right Image') ;
 
 %%
 
 neighbors = 4;
-t_image = transform_image(right, W, T, neighbors, true);
+t_image = transform_image(right, W, T, neighbors, false);
 
-subplot(1,2,1);
-imshow(t_image);
-subplot(1,2,2);
-imshow(left);
+figure, subplot(1,3,1),imshow(left), title('Left Image');
+subplot(1,3,2),imshow(t_image), title('Right Image Transformed');
+subplot(1,3,3), imshow(right), title('Right Image') ;
