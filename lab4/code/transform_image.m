@@ -7,7 +7,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
         W = W .* inverter;
     end
     
-    [row_num,col_num] = size(X);
+    [row_num,col_num, n_channels] = size(X);
     
     z_bounds = floor(W * [ 1 row_num 1 row_num; 1 1 col_num col_num] + T);
     
@@ -19,16 +19,32 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
     max_r = max_vals(1);
     max_c = max_vals(2);
     
-    Z = zeros([max_r - min_r + 1, max_c - min_c + 1, 1]);
+    Z = -1 * ones([max_r - min_r + 1, max_c - min_c + 1, n_channels]);
     
     for c=1:col_num
         for r=1:row_num
             tr_pos = floor(W * [r c]' + T) - [ min_r - 1; min_c - 1];
-            Z(tr_pos(1), tr_pos(2)) = X(r,c);
+            Z(tr_pos(1), tr_pos(2), :) = X(r,c, :);
         end
     end 
     
+<<<<<<< HEAD
     
+=======
+    nn_window = 1;
+    
+%    for i=2:size(Z,1)-1
+%        for j=2:size(Z,2)-1
+%            if Z(i,j) == -1 % if unfilled values
+%                 if inpolygon(i,j, z_bounds(1,:), z_bounds(2,:)) %inside the image
+%                     Z(i,j) = mean(mean(Z(i-nn_window:i+nn_window, j-nn_window:j+nn_window)));
+%                 else % the boundaries
+%                     Z(i,j) = 0;
+%                 end
+%            end
+%        end
+%    end    
+>>>>>>> b6f00e186abc2e9c8aa2caab255255373a247b57
     %TODO: NN
-    Z = medfilt2(Z, [floor(sqrt(neighbours)) floor(sqrt(neighbours))]);
+%     Z = medfilt2(Z, [floor(sqrt(neighbours)) floor(sqrt(neighbours))]);
 end
