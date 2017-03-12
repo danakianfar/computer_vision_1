@@ -47,25 +47,26 @@ nn_filt = @(x) mean(x);
 interp_fun = med_filt; % selector variable
 
 % Left-to-right
-t_image = transform_image(left, W, neighbors, true, interp_fun);   
+t_image = transform_image(im1, W, neighbors, true, interp_fun);   
 figure, subplot(1,3,1), imshow(im1), title('Left Image');
 subplot(1,3,2), imshow(t_image), title('Left Image Transformed');
 subplot(1,3,3), imshow(im2), title('Right Image') ;
 
 % Right-to-left
-t_image = transform_image(right, W, neighbors, false, interp_fun);   
+t_image = transform_image(im2, W, neighbors, false, interp_fun);   
 figure, subplot(1,3,1),imshow(im1), title('Left Image');
 subplot(1,3,2),imshow(t_image), title('Right Image Transformed');
 subplot(1,3,3), imshow(im2), title('Right Image') ;
 autoArrangeFigures(); uistack(1);
 
 %% Transform using MATLAB
-% 
-% tf = maketform('affine', [W ; T']);
-% tformfwd(tf);
-% transformedI = imtransform(right,tf);
-% figure, imshow(transformedI);
-% 
+
+tf = maketform('affine', [W ; T']);
+t_image_m = imtransform(right,tf);
+figure, subplot(1,3,1),imshow(im1), title('Left Image');
+subplot(1,3,2),imshow(t_image_m), title('Right Image Transform with MATLAB');
+subplot(1,3,3), imshow(im2), title('Right Image') ;
+autoArrangeFigures(); uistack(1);
 
 
 %% Image Stitching

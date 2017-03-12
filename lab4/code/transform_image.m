@@ -21,7 +21,8 @@ function [ Z , z_bounds] = transform_image(X, W, neighbours, inverse, interp_fun
     max_c = max_vals(2);
     
     % initialize to -1, so we can track unassigned pixels for interpolation
-    Z = -1 * ones([max_r - min_r + 1, max_c - min_c + 1, n_channels]);
+    z_size= [max_r - min_r + 1, max_c - min_c + 1];
+    Z = -1 * ones([z_size, n_channels]);
     
     % assign values
     for c=1:col_num
@@ -33,7 +34,7 @@ function [ Z , z_bounds] = transform_image(X, W, neighbours, inverse, interp_fun
     
     nn_window = neighbours;
     % pick candidates for NN interpolation
-    [candidates_x, candidates_y] = ind2sub(size(Z), find(Z < 0));
+    [candidates_x, candidates_y] = ind2sub(z_size, find(Z(:,:,1) < 0));
     
     corners = [(z_bounds(1,:) - min_r +1); (z_bounds(2,:) - min_c +1)];
 
