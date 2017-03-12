@@ -17,5 +17,5 @@ function [f1_selection, f2_selection] = plot_sample_matches( left, right, M, F1,
     % Plot random subset of all matching points
     plot([f1_selection(1,:) ; f2_selection(1,:)], [f1_selection(2,:) ; f2_selection(2,:)], 'y-')
     title('Random match samples');
-
+    hold off
 end

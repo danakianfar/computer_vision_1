@@ -8,5 +8,6 @@ function plot_ransac_results( left, right, f1, f2, W, T )
     plot([f1(1,:) ; ransac_keyspoints(1,:)], [f1(2,:) ; ransac_keyspoints(2,:)], 'y-')
     drawnow;
     title('RANSAC Results')
+    hold off
     
 end

@@ -1,4 +1,4 @@
-function [ Z ] = transform_image(X, W, T, neighbours, inverse, interp_fun)
+function [ Z ] = transform_image(X, W, neighbours, inverse, interp_fun)
 
     % Applies the affine transformation given by square matrix W and 
     % translation T to points in image X
@@ -10,7 +10,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse, interp_fun)
     [row_num,col_num, n_channels] = size(X);
     
     % Obtain corners of transformed image
-    z_bounds = floor(W * [ 1  1 row_num row_num; 1 col_num col_num 1] + T);
+    z_bounds = floor(W * [ 1  1 row_num row_num; 1 col_num col_num 1]);
 
     [min_vals, ~ ] = min(z_bounds');
     min_r = min_vals(1);
@@ -26,7 +26,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse, interp_fun)
     % assign values
     for c=1:col_num
         for r=1:row_num
-            tr_pos = floor(W * [r c]' + T) - [ min_r - 1; min_c - 1];
+            tr_pos = floor(W * [r c]' ) - [ min_r - 1; min_c - 1];
             Z(tr_pos(1), tr_pos(2), :) = X(r,c, :);
         end
     end 
