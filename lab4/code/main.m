@@ -7,11 +7,11 @@
 
 clear, clc, close all
 
-% im1= im2single(imread('./images/left.jpg'));
-% im2 = im2single(imread('./images/right.jpg'));
+im1= im2single(imread('./images/left.jpg'));
+im2 = im2single(imread('./images/right.jpg'));
 
-im1 = im2single(imread('./images/boat1.pgm'));
-im2 = im2single(imread('./images/boat2.pgm'));
+% im1 = im2single(imread('./images/boat1.pgm'));
+% im2 = im2single(imread('./images/boat2.pgm'));
 
 if size(im1,3) > 1
    left = rgb2gray(im1);
@@ -29,15 +29,15 @@ end
 M = vl_ubcmatch(D1, D2); 
 
 % Randomly plot 50 matches
-[f1_selection, f2_selection] = plot_sample_matches(left, right, M, F1, F2, 50);
+% [f1_selection, f2_selection] = plot_sample_matches(left, right, M, F1, F2, 50);
  
 % Execute RANSAC to get best match
 p = 0.95; % confidence
 [W, T]= ransac(F1, F2, M, p);
 
 % Plot results
-plot_ransac_results( left, right, f1_selection, f2_selection, W, T )
-autoArrangeFigures(); uistack(1);
+% plot_ransac_results( left, right, f1_selection, f2_selection, W, T )
+% autoArrangeFigures(); uistack(1);
 
 %% Transform Image
 % Parameters
@@ -58,6 +58,15 @@ figure, subplot(1,3,1),imshow(im1), title('Left Image');
 subplot(1,3,2),imshow(t_image), title('Right Image Transformed');
 subplot(1,3,3), imshow(im2), title('Right Image') ;
 autoArrangeFigures(); uistack(1);
+
+%% Transform using MATLAB
+% 
+% tf = maketform('affine', [W ; T']);
+% tformfwd(tf);
+% transformedI = imtransform(right,tf);
+% figure, imshow(transformedI);
+% 
+
 
 %% Image Stitching
 
