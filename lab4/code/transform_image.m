@@ -29,6 +29,7 @@ function [ Z ] = transform_image(X, W, T, neighbours, inverse)
         Z = Z;
     end
     
+    
     %TODO: NN
     Z = medfilt2(Z, [floor(sqrt(neighbours)) floor(sqrt(neighbours))]);
 end
