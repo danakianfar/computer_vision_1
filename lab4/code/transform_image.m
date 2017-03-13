@@ -10,8 +10,8 @@ function [ Z , z_bounds] = transform_image(X, W, neighbours, inverse, interp_fun
     [row_num,col_num, n_channels] = size(X);
     
     % Obtain corners of transformed image
-    z_bounds = floor(W * [ 1  1 row_num row_num; 1 col_num col_num 1]);
-
+    z_bounds = floor(W * [ 1  1 row_num row_num; 1 col_num col_num 1] );
+ 
     [min_vals, ~ ] = min(z_bounds');
     min_r = min_vals(1);
     min_c = min_vals(2);
@@ -27,35 +27,20 @@ function [ Z , z_bounds] = transform_image(X, W, neighbours, inverse, interp_fun
     % assign values
     for c=1:col_num
         for r=1:row_num
-            tr_pos = floor(W * [r c]' ) - [ min_r - 1; min_c - 1];
+            tr_pos = floor(W * [r c]') - [ min_r - 1; min_c - 1];
             Z(tr_pos(1), tr_pos(2), :) = X(r,c, :);
         end
     end 
     
+    % interpolation window size (generally 1)
     nn_window = neighbours;
-    % pick candidates for NN interpolation
+    
+    % pick candidates for NN interpolation (previously assigned as -1)
     [candidates_x, candidates_y] = ind2sub(z_size, find(Z(:,:,1) < 0));
     
+    % find corners of image
     corners = [(z_bounds(1,:) - min_r +1); (z_bounds(2,:) - min_c +1)];
 
-
-    % filter candidates for those inside the boundary
-    [interp_candidates] = inpoly([candidates_x, candidates_y], corners');
-    
-    % replace assigned variables by interpolation, or zero if outside image
-    for c=1:n_channels
-        for i=1:numel(interp_candidates)
-            x = candidates_x(i); y = candidates_y(i);
-
-            if interp_candidates(i)
-                window = Z(max(1,x-nn_window):min(size(Z,1),x+nn_window), ...
-                    max(1,y-nn_window):min(size(Z,2),y+nn_window), c);
-                window = window(:);
-                window = window(window >= 0);
-                Z(x,y,c) = interp_fun(window);
-            else
-                Z(x,y,c) = 0;
-            end
-        end
-    end
+    % perform interpolation
+    Z = interpolate(Z, candidates_x, candidates_y, corners, interp_fun, nn_window, true);
 end

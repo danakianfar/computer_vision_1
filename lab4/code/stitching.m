@@ -1,4 +1,4 @@
-function Z = stitching( im1, im2)
+function Z = stitching( im1, im2, invert)
 
 % Convert image to RBC if necessary
 if size(im1,3) > 1
@@ -23,7 +23,7 @@ p = 0.95; % confidence
 % Transform im2 by applying best RANSAC match
 neighbors = 1;
 nn_filt = @(x) mean(x);
-[t_image, z_bounds] = transform_image(im2, W, neighbors, false, nn_filt);
+[t_image, z_bounds] = transform_image(im2, W, neighbors, invert, nn_filt);
 
 % Create array of corner positions for both images
 [h,w,n_channels] = size(im1);
@@ -40,8 +40,9 @@ q_bounds = w_bounds - [min_r; min_c] + 1;
 Z = zeros([max(q_bounds(1,:)), max(q_bounds(2,:)), n_channels]);
 
 % Merge both transformed and left image
-Z(min(q_bounds(1,5:8)): max(q_bounds(1,5:8)), min(q_bounds(2,5:8)) : max(q_bounds(2,5:8)), :) = t_image;
 Z(min(q_bounds(1,1:4)) : max(q_bounds(1,1:4)), min(q_bounds(2,1:4)) : max(q_bounds(2,1:4)), :) = im1;
+Z(min(q_bounds(1,5:8)): max(q_bounds(1,5:8)), min(q_bounds(2,5:8)) : max(q_bounds(2,5:8)), :) = t_image;
+
 
 end
 

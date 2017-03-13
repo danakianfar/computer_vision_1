@@ -4,12 +4,12 @@ function [best_W, best_T] = ransac(F1, F2, M, p)
     P = 3;
     
     % Heuristic value for estimating the necessary number of iterations
-    N = log(1 - p) / log( 1 - (1 - 0.9) ^ 2);
+    N = ceil(log(1 - p) / log( 1 - (1 - 0.5) ^ (P)));
     
     % Running max auxiliary variable
     max_inliers = 0;
     
-    disp('Init RANSAC execution');
+    disp(compose('RANSAC execution with N=%d',N));
     
     for n=1:N
        
