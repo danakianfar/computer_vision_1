@@ -37,7 +37,9 @@ for i=1:length(training_paths)
    % assign label
    for l=1:length(labels)
         if strfind(image.path, labels{l}) > 1
-            image.label = l; break;
+            image.label = l; 
+            image.label_name = labels{l};
+            break;
         end
    end
    
@@ -49,8 +51,6 @@ for i=1:length(training_paths)
    end
    sift = vl_sift(im2single(tmp));
    image.sift = sift(3:4,:);
-   
-
 end
 
 % Test images
@@ -63,7 +63,8 @@ for i=1:length(testing_paths)
    % assign label
    for l=1:length(labels)
         if strfind(image.path, labels{l}) > 1
-            image.label = l; break;
+            image.label = l; 
+            image.label_name = labels{l}; break;
         end
    end
    
@@ -75,9 +76,5 @@ for i=1:length(testing_paths)
    end
    sift = vl_sift(im2single(tmp));
    image.sift = sift(3:4,:);
-   
 end
-%%
-save('training_struct', training)
-save('testing_struct', testing)
 
