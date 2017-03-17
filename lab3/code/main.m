@@ -51,15 +51,15 @@ sigma = 1; % Gaussian kernel sigma
 
 % Display the found velocity vectors in a video like manner
 figure
-for i=1:50
+for i=1:10
     imshow(I1);
     hold on
-    scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
+    scatter(X,Y,'.r')%, 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
     quiver(Y, X, U, V, 'w')
     getframe;
     pause(0.1)
     imshow(I2)
-    scatter(X,Y,'.r', 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
+    scatter(X,Y,'.r')%, 'MarkerFaceAlpha',.35,'MarkerEdgeAlpha',.35)
     getframe;
 end
 
