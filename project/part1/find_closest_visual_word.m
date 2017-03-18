@@ -33,6 +33,8 @@ function new_idx = find_closest_visual_word(points, model, show_plot)
             error('Error: Clustering method  %s not understood', method);
     end
     
+    points = apply_normalization(points, model.minv, model.rangev);
+    
     % If it is possible and desired to show plot, do it
     if show_plot
         if size(points,2) == 2
@@ -47,3 +49,8 @@ function new_idx = find_closest_visual_word(points, model, show_plot)
     end
 end
 
+
+% Function to apply [-1, 1] normalization
+function res = apply_normalization(ft_matrix, minv, rangev)
+    res = -1 + 2.*(ft_matrix - minv)./ rangev;
+end

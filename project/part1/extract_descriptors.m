@@ -20,7 +20,7 @@ function [ dense_desc, key_desc ] = extract_descriptors(im)
     
     % Execute keypoint SIFT on grayscale image
     % F (frames) is the location of the keypoints
-    F = vl_sift(im_cspaces{1});
+    [F, ~] = vl_sift(im_cspaces{1});
     
     % Store the results of the descriptors for the image in the format:
     % --Dense--  {grayscale, RGB, rgb, HSV, opp}
@@ -46,25 +46,25 @@ function res = apply_sift(im_cell, method, F)
     for c = 1:cspaces
        
         % How many channels does this color space have?
-        layers = size(im_cell{c},3);
+        channel = size(im_cell{c},3);
         
         % Init empty array
         aux = [];
         
         % Concatenate descriptors on all channels
-        for i = 1:layers
+        for i = 1:channel
             
             % Check selected method
             if strcmp(method, 'keypoints')
                 % If no frames provided for keypoints, detect frames per
                 % channel
                 if nargin < 3
-                    [~,desc] = vl_sift(im_cell{c}(:,:,layers), 'frames',F);
+                    [~,desc] = vl_sift(im_cell{c}(:,:,channel), 'frames',F);
                 else
-                    [~,desc] = vl_sift(im_cell{c}(:,:,layers));
+                    [~,desc] = vl_sift(im_cell{c}(:,:,channel));
                 end
             elseif strcmp(method, 'dense')
-                [~,desc] = vl_dsift(im_cell{c}(:,:,layers), 'step', 10);
+                [~,desc] = vl_dsift(im_cell{c}(:,:,channel), 'step', 10);
             else
                 error('Error: SIFT method  %s not understood', method);
             end
