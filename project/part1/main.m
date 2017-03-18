@@ -8,5 +8,23 @@
 %% RESET
 close all, clear all, clc
 
-%% Load data 
+% Params
+num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
+K = [400, 800, 1600, 2000, 4000];
+densities = {'dense', 'key'};
+colorspace = {'Gray', 'RGB', 'rgb', 'HSV', 'Opp'};
 
+%% Extract Features 
+
+
+%% Perform Clustering
+% Load features
+
+S1_feats = load_data_from_folder('./data/training/clustering', num_img_samples);
+
+
+
+%% Perform Classification
+
+% Load features
+S2_feats = load_data_from_folder('./data/training/classification', num_img_samples);

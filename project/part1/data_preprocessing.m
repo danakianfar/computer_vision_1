@@ -52,7 +52,7 @@ function save_images_to_files(paths, labels, is_training_set)
            fpath = compose('%s/%s_%d,struct', testing_path, image.label, i);
        end
        
-       save(fpath, image)
+       save(fpath, image, '-v6')
     end
 end
 
