@@ -35,6 +35,9 @@ parfor k=1:length(K) % for each K
     end
 end
 
+%% Clear workspace
+clear S1_feats
+
 %% Perform Classification
 
 classifiers = {'liblinear'};
@@ -42,14 +45,14 @@ classifiers = {'liblinear'};
 % Load features
 S2_feats = load_data_from_folder('./data/training/classification/', num_img_samples);
 
-for k=1:length(K) % for each K
+parfor k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
             for cl=1:length(classifiers)
                 % load clustering model
                 fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
                     K(k), densities{d}, colorspaces{c}));
-                clustering_model = load(fpath,'-mat')
+                clustering_model = load_saved_model(fpath);
 
                 % load data
                 [bow_features, labels] = get_bows_with_labels(S2_feats, clustering_model, densities{d}, c);
@@ -64,3 +67,6 @@ for k=1:length(K) % for each K
         end
     end
 end
+
+%% Clear workspace
+clear S2_feats

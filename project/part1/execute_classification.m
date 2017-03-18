@@ -18,7 +18,7 @@ function [model] = execute_classification(bow_features, targets, classifier)
 
     switch(classifier)
         case 'liblinear'
-            model = train(targets, bow_features);
+            model = train(targets, sparse(bow_features));
         otherwise
             disp('Classifier not valid.');
     end

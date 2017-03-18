@@ -16,7 +16,7 @@ function [bow] = get_image_bow(descriptors, model)
 %See also:
 % find_closest_visual_word
 
-    words = find_closest_visual_word(descriptors, model, false);
+    words = find_closest_visual_word(double(descriptors), model, false);
     bow = hist(words, 1:length(model.centroids));
     bow = bow ./ sum(bow);
     
