@@ -10,6 +10,9 @@
 %% RESET - careful!
 close all, clear all, clc
 
+%% Pre-process data (will overwrite, this takes time!)
+data_preprocessing();
+
 %% Set Parameters
 num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
 K = [400, 800, 1600, 2000]; %, 4000];
@@ -20,7 +23,7 @@ colorspaces = {'Gray', 'RGB', 'rgb', 'HSV', 'Opp'};
 % Load features
 S1_feats = load_data_from_folder('./data/training/clustering/', num_img_samples);
 
-for k=1:length(K) % for each K
+parfor k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
             X = double(get_features(S1_feats, densities{d}, c)); % get features for d, c
@@ -34,21 +37,30 @@ end
 
 %% Perform Classification
 
+classifiers = {'liblinear'};
+
 % Load features
 S2_feats = load_data_from_folder('./data/training/classification/', num_img_samples);
 
-parfor k=1:length(K) % for each K
+for k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
-            X = get_features(S2_feats, densities{d}, c); % get features for d, c
-            fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
-                K(k), densities{d}, colorspaces{c}));
-            clustering_model = load(fpath,'-mat')
-            
-            bow = get_image_bow(X{c}, clustering_model);
-            
-            
-            parsave(fpath, 'clustering_model'); % same to file
+            for cl=1:length(classifiers)
+                % load clustering model
+                fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
+                    K(k), densities{d}, colorspaces{c}));
+                clustering_model = load(fpath,'-mat')
+
+                % load data
+                [bow_features, labels] = get_bows_with_labels(S2_feats, clustering_model, densities{d}, c);
+
+                % Train classifier
+                classification_model = execute_classification(bow_features, labels, classifiers{cl});
+                
+                fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
+                    K(k), densities{d}, colorspaces{c}, classifiers{cl}));
+                parsave(fpath_save, classification_model); % same to file
+            end
         end
     end
 end

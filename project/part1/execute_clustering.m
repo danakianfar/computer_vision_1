@@ -32,7 +32,7 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
             [idx, centroids]  = kmeans(ft_matrix,K);
             
             % Return results
-            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids, 'minv', minv, 'rangev', rangev);
+            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids, 'minv', minv, 'rangev', rangev,'num_clusters', K);
         case 'gmm'
             
             % First fit the model
