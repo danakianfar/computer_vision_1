@@ -28,18 +28,18 @@ function [features] = get_features(cell_of_structs, density, colorspace)
     for i=1:length(cell_of_structs)
         img = cell_of_structs{i};
         feats = getfield(img, density);
-        N = N + size(feats{c}, 2);
+        N = N + size(feats{colorspace}, 1);
     end
     
     % init huge matrix
-    features = zeros(N,P);
+    features = uint8(zeros(N,P));
     
     j = 1; % pointer for writing
     for i=1:length(cell_of_structs)
         img = cell_of_structs{i}; % get image
         tmp = getfield(img, density); % get cell of colorspaces, given density
         feats = tmp{colorspace}; % get colorspace
-        features(j:j+size(feats,2),:) = feats; % set features
-        j = j+ size(feats,2) + 1; % update pointer
+        features(j:j+size(feats,1)-1,:) = feats; % set features
+        j = j+ size(feats,2); % update pointer
     end
 end

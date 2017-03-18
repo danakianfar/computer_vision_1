@@ -12,7 +12,7 @@ close all, clear all, clc
 
 %% Set Parameters
 num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
-K = [400, 800, 1600, 2000, 4000];
+K = [400, 800, 1600, 2000]; %, 4000];
 densities = {'dense', 'key'};
 colorspaces = {'Gray', 'RGB', 'rgb', 'HSV', 'Opp'};
 
@@ -20,14 +20,14 @@ colorspaces = {'Gray', 'RGB', 'rgb', 'HSV', 'Opp'};
 % Load features
 S1_feats = load_data_from_folder('./data/training/clustering/', num_img_samples);
 
-parfor k=1:length(K) % for each K
+for k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
-            X = get_features(S1_feats, densities{d}, c); % get features for d, c
-            clustering_model = execute_clustering(X, K(k)); % do K-means
+            X = double(get_features(S1_feats, densities{d}, c)); % get features for d, c
+            tic, clustering_model = execute_clustering(X, 'kmeans',K(k)), toc; % do K-means
             fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
                 K(k), densities{d}, colorspaces{c}));
-            parsave(fpath, 'clustering_model'); % same to file
+            parsave(fpath, clustering_model); % same to file
         end
     end
 end
@@ -43,7 +43,7 @@ parfor k=1:length(K) % for each K
             X = get_features(S2_feats, densities{d}, c); % get features for d, c
             fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
                 K(k), densities{d}, colorspaces{c}));
-            clustering_model = load(fpath)
+            clustering_model = load(fpath,'-mat')
             
             bow = get_image_bow(X{c}, clustering_model);
             

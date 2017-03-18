@@ -20,6 +20,10 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
         show_plot = false;
     end
     
+    % Apply normalization to the input data before clustering
+    % Also store nomalization parameters for future data
+    [ft_matrix, minv, rangev] = normalize_features(ft_matrix);
+    
     % Switch depending on the selected method
     switch method
         case 'kmeans'
@@ -28,7 +32,7 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
             [idx, centroids]  = kmeans(ft_matrix,K);
             
             % Return results
-            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids);
+            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids, 'minv', minv, 'rangev', rangev);
         case 'gmm'
             
             % First fit the model
@@ -41,7 +45,7 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
             centroids = GMM.mu;
    
             % Return results
-            res = struct('name', 'gmm', 'idx', idx, 'centroids', centroids, 'model', GMM);
+            res = struct('name', 'gmm', 'idx', idx, 'centroids', centroids, 'model', GMM, 'minv', minv, 'rangev', rangev, 'num_clusters', K);
         otherwise
             
             error('Error: Clustering method  %s not understood', method);
@@ -59,4 +63,12 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
             disp('High dimensional data can not be displayed');
         end
     end
+end
+
+
+% Function to normalize features into [-1, 1]
+function [res, minv, rangev] = normalize_features(ft_matrix)
+    minv = min(ft_matrix);
+    rangev = max(ft_matrix) - min(ft_matrix);
+    res = -1 + 2.*(ft_matrix - minv)./ rangev;
 end

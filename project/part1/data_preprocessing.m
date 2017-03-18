@@ -1,4 +1,5 @@
 %% Run this script to pre-process images and save to disk
+
 % Utility variables
 prefix = '../Caltech4/ImageData/';
 suffix = '.jpg';
@@ -21,8 +22,12 @@ testing_paths = [airplane_test_paths; cars_test_paths; face_test_paths; motorbik
 save_images_to_files(training_paths, labels, true);
 % save_images_to_files(testing_paths, labels, false);
 
-%
+
+% Add comment
 function save_images_to_files(paths, labels, is_training_set)
+    
+    % Lever defines if the point will be used for classifier training or
+    % for vocabulary construction
     lever = 0;
     training_path = './data/training';
     testing_path = './data/testing';
@@ -31,9 +36,8 @@ function save_images_to_files(paths, labels, is_training_set)
     for i=1:10
        image = struct;
        image.path = paths{i};
-    %    image.img = imread(image.path);
 
-       % assign label
+       % Assign label
        for l=1:length(labels)
             if strfind(image.path, labels{l}) > 1
                 image.label = l; 
@@ -41,16 +45,18 @@ function save_images_to_files(paths, labels, is_training_set)
                 break;
             end
        end
+        
+       % Generate SIFT descriptor
+       [dense_desc, key_desc] = extract_descriptors(imread(image.path));
+       image.dense = dense_desc;
+       image.key = key_desc;
 
-       % generate SIFT descriptor
-       % JOSE LOOK HERE
-       
        % Save
        if is_training_set
            fpath = char(compose('%s/%s/%s_%d.struct', training_path, dataset{lever+1}, image.label_name, i));
            lever = abs(lever-1);
        else
-           fpath = char(compose('%s/%s_%d,struct', testing_path, image.label, i));
+           fpath = char(compose('%s/%s_%d.struct', testing_path, image.label_name, i));
        end
        
        save(fpath, 'image', '-v6')
