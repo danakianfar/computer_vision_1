@@ -1,4 +1,5 @@
-function [model] = execute_classification()
+function [model] = execute_classification(bow)
 
+    
 
 end

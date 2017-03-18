@@ -18,16 +18,17 @@ labels = {'airplane', 'car', 'face', 'motorbike'};
 training_paths = [airplane_train_paths; cars_train_paths; face_train_paths; motorbike_train_paths];
 testing_paths = [airplane_test_paths; cars_test_paths; face_test_paths; motorbike_test_paths ];
 
-save_images_to_files(training_paths, true);
-save_images_to_files(testing_paths, false);
+save_images_to_files(training_paths, labels, true);
+% save_images_to_files(testing_paths, labels, false);
 
+%
 function save_images_to_files(paths, labels, is_training_set)
     lever = 0;
     training_path = './data/training';
     testing_path = './data/testing';
     dataset = {'classification','clustering'};
     
-    for i=1:length(paths)
+    for i=1:10
        image = struct;
        image.path = paths{i};
     %    image.img = imread(image.path);
@@ -46,13 +47,13 @@ function save_images_to_files(paths, labels, is_training_set)
        
        % Save
        if is_training_set
-           fpath = compose('%s/%s/%s_%d.struct', training_path, dataset{lever+1}, image.label, i);
+           fpath = char(compose('%s/%s/%s_%d.struct', training_path, dataset{lever+1}, image.label_name, i));
            lever = abs(lever-1);
        else
-           fpath = compose('%s/%s_%d,struct', testing_path, image.label, i);
+           fpath = char(compose('%s/%s_%d,struct', testing_path, image.label, i));
        end
        
-       save(fpath, image, '-v6')
+       save(fpath, 'image', '-v6')
     end
 end
 
