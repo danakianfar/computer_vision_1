@@ -36,7 +36,7 @@ function save_images_to_files(paths, labels, is_training_set)
     testing_path = './data/testing';
     dataset = {'classification','clustering'};
     
-    for i=1:10
+    parfor i=1:length(paths)
         if mod(i,200) == 0
            disp(compose('%d/%d images processed.', i, length(paths))) 
         end
@@ -66,7 +66,7 @@ function save_images_to_files(paths, labels, is_training_set)
            fpath = char(compose('%s/%s_%d.struct', testing_path, image.label_name, i));
        end
        
-       save(fpath, 'image', '-v6')
+       parsave(fpath, image)
     end
 end
 

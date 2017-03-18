@@ -28,7 +28,6 @@ function [data] = load_data_from_folder (folder_path, num_samples)
     % load data
     for f=1:length(files)
         fpath = char(strcat(folder_path, files{f}));
-        tmp_struct = load( fpath, '-mat');
-        data{f} = tmp_struct.image;
+        data{f} = load_saved_model(fpath);
     end
 end
