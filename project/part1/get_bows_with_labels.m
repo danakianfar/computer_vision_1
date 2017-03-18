@@ -18,7 +18,7 @@ function [bow_features, labels] = get_bows_with_labels(cell_of_structs, clusteri
 %   BOW_FEATURES: an NxP matrix, where N is the number of images and P is
 %   the number of clusters. Each row is the BoW representation of the image
 %   with respect to the clustering model centroids
-%   TARGETS: a Px1 vector with labels for each image (1-4)
+%   TARGETS: a Nx1 vector with labels for each image (1-4)
 %
 %See Also
 %execute_clustering
@@ -27,11 +27,11 @@ function [bow_features, labels] = get_bows_with_labels(cell_of_structs, clusteri
 
     % Initialize matrices
     N = length(cell_of_structs);
-    P = size(clustering_model.num_clusters);
+    P = clustering_model.num_clusters;
     bow_features = zeros(N,P);
-    labels = zeros(P,1);
+    labels = zeros(N,1);
 
-    parfor i=1:N % for each image struct
+    for i=1:N % for each image struct
        image = cell_of_structs{i}; 
        features = getfield(image, density);
        bow_features(i,:) = get_image_bow(features{colorspace_idx}, clustering_model); % get bow
