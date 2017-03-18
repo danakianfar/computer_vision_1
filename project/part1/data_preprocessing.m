@@ -1,13 +1,4 @@
-%% Computer Vision 1 
-%
-% Project Part 1: Image Classfication
-% Authors: Dana Kianfar - Jose Gallego
-%
-% Make sure you run VLFEAT setup beforehand.
-% run('C:\Users\Dana\.src\vlfeat-0.9.20\toolbox\vl_setup')
-%% RESET
-close all, clear all, clc
-
+%% Run this script to pre-process images and save to disk
 % Utility variables
 prefix = '../Caltech4/ImageData/';
 suffix = '.jpg';
@@ -27,10 +18,15 @@ labels = {'airplane', 'car', 'face', 'motorbike'};
 training_paths = [airplane_train_paths; cars_train_paths; face_train_paths; motorbike_train_paths];
 testing_paths = [airplane_test_paths; cars_test_paths; face_test_paths; motorbike_test_paths ];
 
-save_images_to_files(trainig_paths, './data/training/');
-save_images_to_files(testing_paths, './data/testing/');
+save_images_to_files(training_paths, true);
+save_images_to_files(testing_paths, false);
 
-function save_images_to_files(paths, labels, parent_dir)
+function save_images_to_files(paths, labels, is_training_set)
+    lever = 0;
+    training_path = './data/training';
+    testing_path = './data/testing';
+    dataset = {'classification','clustering'};
+    
     for i=1:length(paths)
        image = struct;
        image.path = paths{i};
@@ -40,14 +36,23 @@ function save_images_to_files(paths, labels, parent_dir)
        for l=1:length(labels)
             if strfind(image.path, labels{l}) > 1
                 image.label = l; 
-                image.label_name = labels{l}; break;
+                image.label_name = labels{l}; 
+                break;
             end
        end
 
        % generate SIFT descriptor
-       
+       % JOSE LOOK HERE
        
        % Save
+       if is_training_set
+           fpath = compose('%s/%s/%s_%d.struct', training_path, dataset{lever+1}, image.label, i);
+           lever = abs(lever-1);
+       else
+           fpath = compose('%s/%s_%d,struct', testing_path, image.label, i);
+       end
+       
+       save(fpath, image)
     end
 end
 
