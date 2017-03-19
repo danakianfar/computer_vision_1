@@ -56,7 +56,7 @@ function save_images_to_files(paths, labels, is_training_set)
        % Generate SIFT descriptor
        im_data = imread(image.path);
        if size(im_data, 3) == 1 % if an rgb image, just replicate channel
-          im_data = repmat(a,1,1,3);
+          im_data = repmat(im_data,1,1,3);
        end
        
        
