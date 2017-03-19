@@ -4,15 +4,16 @@
 % Authors: Dana Kianfar - Jose Gallego
 %
 % Make sure you run VLFEAT setup beforehand.
-% run('C:\Users\Dana\.src\vlfeat-0.9.20\toolbox\vl_setup')
+run('C:\Users\Dana\.src\vlfeat-0.9.20\toolbox\vl_setup')
 % Also for LibLinear
-% addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
+addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
 %% RESET - careful!
 close all, clear all, clc
 
 %% Pre-process data (will overwrite, this takes time!)
+tic
 data_preprocessing();
-
+toc
 %% Set Parameters
 num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
 K = [400, 800, 1600, 2000]; %, 4000];
