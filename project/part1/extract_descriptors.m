@@ -70,7 +70,7 @@ function res = apply_sift(im_cell, method, F)
             end
             
             % Concatenate descriptors
-            aux = cat(2,aux,desc);
+            aux = cat(1,aux,desc);
         end
         
         % Save results

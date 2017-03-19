@@ -21,7 +21,6 @@ function [features] = get_features(cell_of_structs, density, colorspace)
 
     % Size of features matrix
     N = 0;
-    P = 128;
     
     % estimate N by looping through all images and aggregating their
     % number of descriptors
@@ -32,6 +31,7 @@ function [features] = get_features(cell_of_structs, density, colorspace)
     end
     
     % init huge matrix
+    P = size(feats{colorspace},2);
     features = uint8(zeros(N,P));
     
     j = 1; % pointer for writing
