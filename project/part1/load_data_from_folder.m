@@ -19,11 +19,11 @@ function [data] = load_data_from_folder (folder_path, num_samples)
     files = {files.name};
     files = {files{3:end}}; % exclude first two items '.' and '..'
     
-    data = cell(1,length(files)); % where structs will be stored
-    
     if nargin > 1 && num_samples > 0
         files =  randsample(files, num_samples); % sample randomly from files
     end
+    
+    data = cell(1,length(files)); % where structs will be stored
     
     % load data
     for f=1:length(files)
