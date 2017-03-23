@@ -59,12 +59,7 @@ num_img_samples = 0; % Number of images to sample for training. Use 0 to retriev
 classifiers = {'liblinear'};
 
 % Load features
-tic
 S2_feats = load_data_from_folder('./data/training/classification/', num_img_samples);
-toc
-
-%%
-
 binary_class = false;
 
 for k=1:length(K) % for each K
