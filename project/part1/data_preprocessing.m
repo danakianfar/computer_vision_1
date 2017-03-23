@@ -19,8 +19,8 @@ function data_preprocessing()
     training_paths = [airplane_train_paths; cars_train_paths; face_train_paths; motorbike_train_paths];
     testing_paths = [airplane_test_paths; cars_test_paths; face_test_paths; motorbike_test_paths ];
 
-    disp('Pre-processing training data');
-    save_images_to_files(training_paths, labels, true);
+    %disp('Pre-processing training data');
+    %save_images_to_files(training_paths, labels, true);
     
     disp('Pre-processing testing data');
     save_images_to_files(testing_paths, labels, false);
@@ -76,4 +76,3 @@ function save_images_to_files(paths, labels, is_training_set)
        parsave(fpath, image)
     end
 end
-

@@ -1,36 +1,23 @@
-function [ dense_desc, key_desc ] = extract_descriptors(im)
-%EXTRACT_DESCRIPTORS Extracts dense and keypoints SIFT descriptors
-%
-%   [D, K] = EXTRACT_DESCRIPTORS(I) extracts dense D and keypoint K SIFT
-%   descriptors for an image I in color spaces: grayscale, RGB, rgb, HSV
-%   and opponent.
-%
-% Inputs:
-%   I: RGB image tensor
-%
-% Outputs:
-%   D: dense SIFT descriptors calculated every 10 pixels
-%   K: SIFT descriptors at the keypoints detected using grayscale image
+im = imread('../Caltech4/ImageData/airplanes_test/img001.jpg');
 
-    % SIFT needs image to be single precision
-    im = im2single(im);
+im = im2single(im);
     
-    % Convert image to different color spaces
-    im_cspaces = { rgb2gray(im), im, rgb2hsv(im), rgb2opp(im), rgb2norm(im)};
-    
-    % Execute keypoint SIFT on grayscale image
-    % F (frames) is the location of the keypoints
-    [F, ~] = vl_sift(im_cspaces{1});
-    
-    % Store the results of the descriptors for the image in the format:
-    % --Dense--  {grayscale, RGB, rgb, HSV, opp}
-    % -Keypoint- {grayscale, RGB, rgb, HSV, opp}
-    
-    % Execute SIFT
-    dense_desc = apply_sift(im_cspaces, 'dense');
-    key_desc = apply_sift(im_cspaces, 'keypoints', F);
-    
-end
+% Convert image to different color spaces
+im_cspaces = { rgb2gray(im), im, rgb2norm(im), rgb2hsv(im), rgb2opp(im)};
+
+% Execute keypoint SIFT on grayscale image
+% F (frames) is the location of the keypoints
+[F, ~] = vl_sift(im_cspaces{1});
+
+% Store the results of the descriptors for the image in the format:
+% --Dense--  {grayscale, RGB, rgb, HSV, opp}
+% -Keypoint- {grayscale, RGB, rgb, HSV, opp}
+
+% Execute SIFT
+%dense_desc = apply_sift(im_cspaces, 'dense');
+%key_desc = apply_sift(im_cspaces, 'keypoints', F);
+
+
 
 
 % Function for applying dense SIFT on cell of several color spaces
@@ -43,38 +30,38 @@ function res = apply_sift(im_cell, method, F)
     res = cell(1,cspaces);
     
     % For each color space find features
-    for c = 1:cspaces
+    for cs = 1:cspaces
        
         % How many channels does this color space have?
-        channel = size(im_cell{c},3);
+        channels = size(im_cell{cs},3);
         
         % Init empty array
         aux = [];
         
         % Concatenate descriptors on all channels
-        for i = 1:channel
+        for chan = 1:channels
             
             % Check selected method
             if strcmp(method, 'keypoints')
                 % If no frames provided for keypoints, detect frames per
                 % channel
                 if nargin < 3
-                    [~,desc] = vl_sift(im_cell{c}(:,:,channel), 'frames',F);
+                    [~,desc] = vl_sift(im_cell{cs}(:,:,chan), 'frames',F);
                 else
-                    [~,desc] = vl_sift(im_cell{c}(:,:,channel));
+                    [~,desc] = vl_sift(im_cell{cs}(:,:,chan));
                 end
             elseif strcmp(method, 'dense')
-                [~,desc] = vl_dsift(im_cell{c}(:,:,channel), 'step', 10);
+                [~,desc] = vl_dsift(im_cell{cs}(:,:,chan), 'step', 10);
             else
                 error('Error: SIFT method  %s not understood', method);
             end
             
             % Concatenate descriptors
-            aux = cat(1,aux,desc);
+            aux = cat(2,aux,desc);
         end
         
         % Save results
-        res{1,c} = aux';
+        res{1,cs} = aux;
     end
 end
 
@@ -99,9 +86,9 @@ function res = rgb2norm(im)
     I = R + G + B;
     
     % Convert to normalized RGB
-    r = R; %./ I;
-    g = G; %./ I;
-    b = B; %./ I;
+    r = R ./ I;
+    g = G ./ I;
+    b = B ./ I;
     
     res = cat(3, r, g, b);
 end
