@@ -10,6 +10,15 @@ addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
 addpath('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab')
 run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
 % vl_compilenn('enableGpu', true, 'cudaRoot', 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0', 'cudaMethod', 'nvcc', 'enableCudnn', true, 'cudnnRoot', 'local/cudnn-rc4') ;
+
+%% Setup Ubuntu
+
+%run('../../../../vlfeat/toolbox/vl_setup')
+%run('../../../../matconvnet/matlab/vl_setupnn')
+%addpath('../../../../matconvnet/matlab')
+%addpath('../../../../liblinear-2.1/matlab/')
+
+
 %% RESET - careful!
 close all, clear, clc
 
