@@ -94,7 +94,7 @@ cars_train_paths = read_file_lines('../Caltech4/ImageSets/cars_train.txt',prefix
 cars_test_paths = read_file_lines('../Caltech4/ImageSets/cars_test.txt',prefix, suffix);
 
 % label values correspond to position in array
-labels = {'airplane', 'car', 'face', 'motorbike'};
+labels = classes;
 
 % Aggregate paths
 training_paths = [airplane_train_paths; cars_train_paths; face_train_paths; motorbike_train_paths];
