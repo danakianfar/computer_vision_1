@@ -81,7 +81,7 @@ function net = update_model(varargin)
 
     %  Define loss                     
     % Loss layer
-    net.layers{end+1} = struct('type', 'softmaxloss') ;
+    net.layers{end+1} = struct('type', 'loss') ;
 
     % Fill in default values
     net = vl_simplenn_tidy(net) ;
