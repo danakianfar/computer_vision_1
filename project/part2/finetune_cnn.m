@@ -41,7 +41,7 @@ function [net, info, expdir] = finetune_cnn(varargin)
       save(opts.imdbPath, '-struct', 'imdb') ;
     end
 
-    %%
+    %
     net.meta.classes.name = imdb.meta.classes(:)' ;
 
     % -------------------------------------------------------------------------
