@@ -55,7 +55,8 @@ function save_images_to_files(paths, labels, is_training_set)
         
        % Generate SIFT descriptor
        im_data = imread(image.path);
-       if size(im_data, 3) == 1 % if an rgb image, just replicate channel
+       
+       if size(im_data, 3) == 1 % if an grayscale image, just replicate channel
           im_data = repmat(im_data,1,1,3);
        end
        
@@ -66,7 +67,7 @@ function save_images_to_files(paths, labels, is_training_set)
 
        % Save
        if is_training_set
-           lever = rand > 0.5;
+           lever = mod(i,2);
            fpath = char(compose('%s/%s/%s_%d.struct', training_path, dataset{lever+1}, image.label_name, i));
        else
            fpath = char(compose('%s/%s_%d.struct', testing_path, image.label_name, i));

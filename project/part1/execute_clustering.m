@@ -22,17 +22,18 @@ function res = execute_clustering(ft_matrix, method, K, show_plot)
     
     % Apply normalization to the input data before clustering
     % Also store nomalization parameters for future data
-    [ft_matrix, minv, rangev] = normalize_features(ft_matrix);
+%     [ft_matrix , minv, rangev] = normalize_features(ft_matrix);
     
     % Switch depending on the selected method
     switch method
         case 'kmeans'
             
             % Run standard kmeans on data
-            [idx, centroids]  = kmeans(ft_matrix,K);
+            [centroids, idx] = vl_ikmeans(ft_matrix', K, 'MaxIters', 800 , 'method', 'elkan', 'Verbose') ;
+%             [idx, centroids]  = kmeans(ft_matrix,K, );
             
             % Return results
-            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids, 'minv', minv, 'rangev', rangev,'num_clusters', K);
+            res = struct('name', 'kmeans', 'idx', idx, 'centroids', centroids, 'num_clusters', K); % 'minv', minv, 'rangev', rangev,);
         case 'gmm'
             
             % First fit the model
