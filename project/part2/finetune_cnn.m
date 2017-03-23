@@ -83,15 +83,89 @@ function imdb = getCaltechIMDB()
 % -------------------------------------------------------------------------
 % Preapre the imdb structure, returns image data with mean image subtracted
 classes = {'airplanes', 'cars', 'faces', 'motorbikes'};
-splits = {'train', 'test'};
 
-%% TODO: Implement your loop here, to create the data structure described in the assignment
+% Utility variables
+prefix = '../Caltech4/ImageData/';
+suffix = '.jpg';
+airplane_train_paths = read_file_lines('../Caltech4/ImageSets/airplanes_train.txt',prefix, suffix);
+airplane_test_paths = read_file_lines('../Caltech4/ImageSets/airplanes_test.txt',prefix, suffix);
+motorbike_train_paths = read_file_lines('../Caltech4/ImageSets/motorbikes_train.txt',prefix, suffix);
+motorbike_test_paths = read_file_lines('../Caltech4/ImageSets/motorbikes_test.txt',prefix, suffix);
+face_train_paths = read_file_lines('../Caltech4/ImageSets/faces_train.txt',prefix, suffix);
+face_test_paths = read_file_lines('../Caltech4/ImageSets/faces_test.txt',prefix, suffix);
+cars_train_paths = read_file_lines('../Caltech4/ImageSets/cars_train.txt',prefix, suffix);
+cars_test_paths = read_file_lines('../Caltech4/ImageSets/cars_test.txt',prefix, suffix);
 
+% label values correspond to position in array
+labels = {'airplane', 'car', 'face', 'motorbike'};
 
-%%
+% Aggregate paths
+training_paths = [airplane_train_paths; cars_train_paths; face_train_paths; motorbike_train_paths];
+testing_paths = [airplane_test_paths; cars_test_paths; face_test_paths; motorbike_test_paths ];
+
+% Initialize structs
+imdb = struct;
+imdb.images = struct;
+imdb.meta = struct;
+ 
+% Allocate memory
+imdb.images.data = zeros(32,32,3,length(training_paths) + length(testing_paths));
+imdb.images.labels = zeros(1,length(training_paths) + length(testing_paths));
+imdb.images.set = zeros(1,length(training_paths) + length(testing_paths));
+
+tr_img = vl_imreadjpeg(training_paths, 'Resize', [32, 32]);
+
+for i=1:length(training_paths)
+    
+    im_data = tr_img{i};
+
+    if size(im_data, 3) == 1 % if an grayscale image, just replicate channel
+      im_data = repmat(im_data,1,1,3);
+    end
+   
+   % Store image data
+   imdb.images.data(:,:,:,i) = im_data; 
+   
+    % Assign label
+    for l=1:length(labels)
+        if strfind(training_paths{i}, labels{l}) > 1
+            imdb.images.labels(i) = l; 
+            break;
+        end
+    end
+    
+    % 1 for training
+    imdb.images.set(i) = 1;    
+end
+
+tst_img = vl_imreadjpeg(testing_paths, 'Resize', [32, 32]);
+
+for i=1:length(testing_paths)
+    
+    im_data = tst_img{i};
+
+    if size(im_data, 3) == 1 % if an grayscale image, just replicate channel
+      im_data = repmat(im_data,1,1,3);
+    end
+   
+   % Store image data
+   imdb.images.data(:,:,:,i + length(training_paths)) = im_data; 
+   
+    % Assign label
+    for l=1:length(labels)
+        if strfind(testing_paths{i}, labels{l}) > 1
+            imdb.images.labels(i + length(training_paths)) = l; 
+            break;
+        end
+    end
+    
+    % 2 for testing
+    imdb.images.set(i + length(training_paths)) = 2;    
+end
+
 % subtract mean
-dataMean = mean(data(:, :, :, sets == 1), 4);
-data = bsxfun(@minus, data, dataMean);
+dataMean = mean(imdb.images.data(:, :, :, imdb.images.set == 1), 4);
+data = bsxfun(@minus, imdb.images.data, dataMean);
 
 imdb.images.data = data ;
 imdb.images.labels = single(labels) ;
