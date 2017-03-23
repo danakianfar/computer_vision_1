@@ -8,6 +8,7 @@ run('C:\Users\Dana\.src\vlfeat-0.9.20\toolbox\vl_setup')
 % Also for LibLinear
 addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
 addpath('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab')
+run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
 % vl_compilenn('enableGpu', true, 'cudaRoot', 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0', 'cudaMethod', 'nvcc', 'enableCudnn', true, 'cudnnRoot', 'local/cudnn-rc4') ;
 %% RESET - careful!
 close all, clear, clc
@@ -42,8 +43,9 @@ end
 % Clear workspace
 clear S1_feats
 
-% Perform Classification
+%% Perform Classification
 
+num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
 classifiers = {'liblinear'};
 
 % Load features
@@ -54,15 +56,17 @@ parfor k=1:length(K) % for each K
         for c=1:length(colorspaces)  % for each colorspace
             for cl=1:length(classifiers)
                 % load clustering model
-                fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
-                    K(k), densities{d}, colorspaces{c}));
-                clustering_model = load_saved_model(fpath);
-
+                clustering_model = load_saved_model('clustering', K(k), densities{d}, colorspaces{c});
+                
+                disp(compose('Clustering with K=%d, density=%s, colorspace=%s',K(k),densities{d}, colorspaces{c}))
+            
                 % load data
+                tic
                 [bow_features, labels] = get_bows_with_labels(S2_feats, clustering_model, densities{d}, c);
 
                 % Train classifier
                 classification_model = execute_classification(bow_features, labels, classifiers{cl});
+                toc
                 
                 fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
                     K(k), densities{d}, colorspaces{c}, classifiers{cl}));
@@ -76,35 +80,40 @@ end
 clear S2_feats
 
 %% Run test evaluation
+num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
+classifiers = {'liblinear'};
 
-% Load features
-% testing_feats = load_data_from_folder('./data/testing/', num_img_samples);
-% 
-% parfor k=1:length(K) % for each K
-%     for d=1:length(densities) % for each type of sampling (dense, keypoints)
-%         for c=1:length(colorspaces)  % for each colorspace
-%             for cl=1:length(classifiers)
-%                 % load clustering model
-%                 fpath = char(compose('./data/clusters/K-%d_D-%s_c-%s.struct', ...
-%                     K(k), densities{d}, colorspaces{c}));
-%                 
-%                 clustering_model = load_saved_model(fpath);
-% 
-%                 % load data
-%                 [bow_features, labels] = get_bows_with_labels(testing_feats, clustering_model, densities{d}, c);
-% 
-%                 % Predict labels
-% %                 classification_model = execute_classification(bow_features, labels, classifiers{cl});
-%                 
-%                 % Evaluate results
-%                 
-%                 
-%                 % Save mat
-%                 fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
-%                     K(k), densities{d}, colorspaces{c}, classifiers{cl}));
-%                 parsave(fpath_save, classification_model); % same to file
-%             end
-%         end
-%     end
-% end
+% Load test images 
+testing_imgs = load_data_from_folder('./data/testing/', num_img_samples);
+
+for k=1:length(K) % for each K
+    for d=1:length(densities) % for each type of sampling (dense, keypoints)
+        for c=1:length(colorspaces)  % for each colorspace
+            for cl=1:length(classifiers)
+                % load clustering & classification models
+                tic
+                clustering_model = load_saved_model('clustering', K(k), densities{d}, colorspaces{c});
+                classification_model = load_saved_model('classification', K(k), densities{d}, colorspaces{c}, classifiers{cl});
+                toc
+                % load data
+                
+                tic
+                [bow_features, labels] = get_bows_with_labels(testing_imgs, clustering_model, densities{d}, c);
+                toc 
+                
+                % Predict labels
+                
+%                 classification_model = execute_classification(bow_features, labels, classifiers{cl});
+                
+                % Evaluate results
+                
+                
+                % Save mat
+                fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
+                    K(k), densities{d}, colorspaces{c}, classifiers{cl}));
+                parsave(fpath_save, classification_model); % same to file
+            end
+        end
+    end
+end
 

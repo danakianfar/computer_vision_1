@@ -16,7 +16,7 @@ function [bow] = get_image_bow(descriptors, model)
 %See also:
 % find_closest_visual_word
 
-    words = find_closest_visual_word(double(descriptors), model, false);
-    bow = histogram(words, 1:length(model.centroids), 'Normalization', 'probability');
+    words = find_closest_visual_word(descriptors, model);
+    bow = histcounts(words, 1:length(model.centroids)+1, 'Normalization', 'probability');
     
 end

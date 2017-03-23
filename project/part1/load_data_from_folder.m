@@ -28,6 +28,6 @@ function [data] = load_data_from_folder (folder_path, num_samples)
     % load data
     for f=1:length(files)
         fpath = char(strcat(folder_path, files{f}));
-        data{f} = load_saved_model(fpath);
+        data{f} = load_saved_model_from_path(fpath);
     end
 end
