@@ -50,8 +50,8 @@ classifiers = {'liblinear'};
 
 % Load features
 S2_feats = load_data_from_folder('./data/training/classification/', num_img_samples);
-
-parfor k=1:length(K) % for each K
+%%
+for k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
             for cl=1:length(classifiers)
