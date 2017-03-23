@@ -12,7 +12,7 @@ function [ map ] = scores2map( scores, labels, target_class)
 
     % Join scores and labels and sort them on ascending negatives (=
     % descending) scores
-    A = [ -scores' labels'];
+    A = [ -scores labels];
     sorted_A = sortrows(A, 1);
      
     % Get the sorted labels and check if they are the relevant label

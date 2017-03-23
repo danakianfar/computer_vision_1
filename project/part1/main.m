@@ -82,7 +82,8 @@ clear S2_feats
 %% Run test evaluation
 num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
 classifiers = {'liblinear'};
-
+labels = {'airplane', 'car', 'face', 'motorbike'};
+    
 % Load test images 
 testing_imgs = load_data_from_folder('./data/testing/', num_img_samples);
 
@@ -90,28 +91,29 @@ for k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
         for c=1:length(colorspaces)  % for each colorspace
             for cl=1:length(classifiers)
+                
                 % load clustering & classification models
-                tic
                 clustering_model = load_saved_model('clustering', K(k), densities{d}, colorspaces{c});
                 classification_model = load_saved_model('classification', K(k), densities{d}, colorspaces{c}, classifiers{cl});
-                toc
+                
                 % load data
-                
-                tic
                 [bow_features, labels] = get_bows_with_labels(testing_imgs, clustering_model, densities{d}, c);
-                toc 
-                
+                                
                 % Predict labels
+                [predicted_label, accuracy, scores] = predict(labels, sparse(bow_features), classification_model);
                 
-%                 classification_model = execute_classification(bow_features, labels, classifiers{cl});
+                % Evaluate predictions
+                map1 = scores2map(scores(:,1), labels, 1);
+                map2 = scores2map(scores(:,2), labels, 2);
+                map3 = scores2map(scores(:,3), labels, 3);
+                map4 = scores2map(scores(:,4), labels, 4);
                 
-                % Evaluate results
-                
+                disp(compose('mAP of K=%d, d=%s, c=%s: airplanes:%.3f, cars:%.3f, faces:%.3f, motorbikes:%.3f', K(k), densities{d}, colorspaces{c}, map1, map2, map3, map4));
                 
                 % Save mat
-                fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
-                    K(k), densities{d}, colorspaces{c}, classifiers{cl}));
-                parsave(fpath_save, classification_model); % same to file
+%                 fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
+%                     K(k), densities{d}, colorspaces{c}, classifiers{cl}));
+%                 parsave(fpath_save, classification_model); % same to file
             end
         end
     end
