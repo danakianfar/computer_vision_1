@@ -26,7 +26,7 @@ function [accuracy] = get_nn_accuracy(net, data)
     for i = 1:size(data.images.data, 4)
 
         if(data.images.set(i)==2)    
-            res = vl_simplenn(net, data.images.data(:, :,:, i), 'CuDNN', true);
+            res = vl_simplenn(net, data.images.data(:, :,:, i));
 
             [~, estimclass] = max(res(end).x);
 
