@@ -5,7 +5,6 @@
 %
 % Make sure you run VLFEAT setup beforehand.
 run('C:\Users\Dana\.src\vlfeat-0.9.20\toolbox\vl_setup')
-% Also for LibLinear
 addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
 addpath('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab')
 run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
@@ -27,9 +26,9 @@ tic, data_preprocessing(), toc;
 
 %% Set Parameters
 num_img_samples = 400; % Number of images to sample for training. Use 0 to retrieve all.
-K = [400, 800, 1600, 2000]; %, 4000];
+K = [400, 800, 1600, 2000, 4000];
 densities = {'dense', 'key'};
-colorspaces = {'Gray', 'RGB', 'rgb', 'HSV', 'Opp'};
+colorspaces = {'Gray', 'RGB', 'HSV', 'Opp','rgb'};
 
 %% Perform Clustering
 % Load features
@@ -57,10 +56,16 @@ clear S1_feats
 
 num_img_samples = 0; % Number of images to sample for training. Use 0 to retrieve all.
 classifiers = {'liblinear'};
+K = [400, 800, 1600, 2000, 4000];
+densities = {'dense', 'key'};
+colorspaces = {'Gray', 'RGB', 'HSV', 'Opp','rgb'};
+
 
 % Load features
+tic
 S2_feats = load_data_from_folder('./data/training/classification/', num_img_samples);
-binary_class = false;
+toc
+binary_class = true;
 
 for k=1:length(K) % for each K
     for d=1:length(densities) % for each type of sampling (dense, keypoints)
@@ -69,17 +74,14 @@ for k=1:length(K) % for each K
                 
                 % load clustering model
                         clustering_model = load_saved_model('clustering', K(k), densities{d}, colorspaces{c});
-
-                        disp(compose('Clustering with K=%d, density=%s, colorspace=%s',K(k),densities{d}, colorspaces{c}))
-
+                        
                         % load data
                         tic
                         [bow_features, labels] = get_bows_with_labels(S2_feats, clustering_model, densities{d}, c);
-
                         
                 if binary_class
                     for obj_class = 1:4
-                    
+                        disp(compose('Binary clustering class=%d with K=%d, density=%s, colorspace=%s',obj_class, K(k),densities{d}, colorspaces{c}))
                         labels = double(labels == obj_class);
 
                         % Train classifier
@@ -91,14 +93,14 @@ for k=1:length(K) % for each K
                     end
                     toc
                 else
-                    
-                        % Train classifier
-                        classification_model = execute_classification(bow_features, labels, classifiers{cl});
-                        toc
+                    disp(compose('Multi-class clustering with K=%d, density=%s, colorspace=%s',K(k),densities{d}, colorspaces{c}))
+                    % Train classifier
+                    classification_model = execute_classification(bow_features, labels, classifiers{cl});
+                    toc
 
-                        fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
-                                    K(k), densities{d}, colorspaces{c}, classifiers{cl}));
-                        parsave(fpath_save, classification_model); % same to file
+                    fpath_save = char(compose('./data/classifiers/K-%d_D-%s_c-%s_%s.struct', ...
+                                K(k), densities{d}, colorspaces{c}, classifiers{cl}));
+                    parsave(fpath_save, classification_model); % same to file
                 end
             end
         end

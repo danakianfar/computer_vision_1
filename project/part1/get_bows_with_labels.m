@@ -34,7 +34,17 @@ function [bow_features, labels] = get_bows_with_labels(cell_of_structs, clusteri
     for i=1:N % for each image struct
        image = cell_of_structs{i}; 
        features = getfield(image, density);
+       
+       if sum(isnan(features{colorspace_idx})) > 0
+          disp('stop') 
+       end
+       
        bow_features(i,:) = get_image_bow(features{colorspace_idx}, clustering_model); % get bow
+       
+       if sum(isnan(bow_features(i,:))) > 0
+          disp('stop') 
+       end
+       
        labels(i) = image.label; % save target (1-4)
     end
     

@@ -23,8 +23,8 @@ function [ dense_desc, key_desc ] = extract_descriptors(im)
     [F, ~] = vl_sift(im_cspaces{1});
     
     % Store the results of the descriptors for the image in the format:
-    % --Dense--  {grayscale, RGB, rgb, HSV, opp}
-    % -Keypoint- {grayscale, RGB, rgb, HSV, opp}
+    % --Dense--  {grayscale, RGB, HSV, opp, rgb}
+    % -Keypoint- {grayscale, RGB, HSV, opp, rgb}
     
     % Execute SIFT
     dense_desc = apply_sift(im_cspaces, 'dense');
@@ -59,9 +59,9 @@ function res = apply_sift(im_cell, method, F)
                 % If no frames provided for keypoints, detect frames per
                 % channel
                 if nargin < 3
-                    [~,desc] = vl_sift(im_cell{c}(:,:,channel), 'frames',F);
-                else
                     [~,desc] = vl_sift(im_cell{c}(:,:,channel));
+                else
+                    [~,desc] = vl_sift(im_cell{c}(:,:,channel), 'frames',F);
                 end
             elseif strcmp(method, 'dense')
                 [~,desc] = vl_dsift(im_cell{c}(:,:,channel), 'step', 10);
@@ -71,6 +71,10 @@ function res = apply_sift(im_cell, method, F)
             
             % Concatenate descriptors
             aux = cat(1,aux,desc);
+            
+            if isempty(aux)
+               disp('Empty!!') 
+            end
         end
         
         % Save results
