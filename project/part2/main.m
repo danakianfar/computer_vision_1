@@ -17,10 +17,35 @@ run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
 %% extract features and train svm
 
 
-nets.fine_tuned = load(fullfile(expdir, 'net-epoch-50.mat')); nets.fine_tuned = nets.fine_tuned.net;
+nets.fine_tuned = load(fullfile(expdir, 'net-epoch-34.mat')); nets.fine_tuned = nets.fine_tuned.net;
 nets.pre_trained = load(fullfile('data', 'pre_trained_model.mat')); nets.pre_trained = nets.pre_trained.net; 
 data = load(fullfile(expdir, 'imdb-caltech.mat'));
 
 
 %%
 train_svm(nets, data);
+
+
+%%
+%net = load(fullfile('data', 'imagenet-vgg-verydeep-16.mat'));
+
+net = load(fullfile('data', 'imagenet-matconvnet-alex.mat'));
+
+%%
+
+% obtain and preprocess an image
+im = imread('../Caltech4/ImageData/faces_train/img011.jpg') ;
+im_ = single(im) ; % note: 255 range
+im_ = imresize(im_, net.meta.normalization.imageSize(1:2)) ;
+im_ = im_ - net.meta.normalization.averageImage ;
+
+% run the CNN
+res = vl_simplenn(net, im_) ;
+
+% show the classification result
+scores = squeeze(gather(res(end).x)) ;
+[bestScore, best] = max(scores) ;
+
+figure(1) ; clf ; imagesc(im) ;
+title(sprintf('%s (%d), score %.3f',...
+  net.meta.classes.description{best}, best, bestScore)) ;

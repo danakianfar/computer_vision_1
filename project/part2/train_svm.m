@@ -13,9 +13,9 @@ function train_svm(nets, data)
     [svm.pre_trained.predictions, svm.pre_trained.accuracy] = get_predictions(svm.pre_trained);
     [svm.fine_tuned.predictions, svm.fine_tuned.accuracy] = get_predictions(svm.fine_tuned);
 
-    fprintf('\n\n\n\n\n\n\n\n');
+    fprintf('\n\n\n');
 
-    fprintf('CNN: fine_tuned_accuracy: %0.2f, SVM: pre_trained_accuracy: %0.2f, fine_tuned_accuracy: %0.2f\n', nn.accuracy, svm.pre_trained.accuracy(1), svm.fine_tuned.accuracy(1));
+    fprintf('CNN: fine_tuned_accuracy: %0.3f, SVM: pre_trained_accuracy: %0.3f, fine_tuned_accuracy: %0.3f\n', 100*nn.accuracy, svm.pre_trained.accuracy(1), svm.fine_tuned.accuracy(1));
 
 end
 

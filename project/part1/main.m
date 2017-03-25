@@ -13,10 +13,10 @@ run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
 
 %% Setup Ubuntu
 
-%run('../../../../vlfeat/toolbox/vl_setup')
-%run('../../../../matconvnet/matlab/vl_setupnn')
-%addpath('../../../../matconvnet/matlab')
-%addpath('../../../../liblinear-2.1/matlab/')
+run('../../../../vlfeat/toolbox/vl_setup')
+run('../../../../matconvnet/matlab/vl_setupnn')
+addpath('../../../../matconvnet/matlab')
+addpath('../../../../liblinear-2.1/matlab/')
 
 
 %% RESET - careful!
