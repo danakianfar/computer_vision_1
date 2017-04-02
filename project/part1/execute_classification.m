@@ -19,7 +19,9 @@ function [model] = execute_classification(bow_features, targets, classifier)
     switch(classifier)
         case 'liblinear'
             model = train(targets, sparse(bow_features));
-        otherwise
-            disp('Classifier not valid.');
+        case 'libsvm-poly'
+            model = fitcsvm(bow_features, targets, 'KernelFunction', 'polynomial');
+        case 'libsvm-rbf'
+            model = fitcsvm(bow_features, targets, 'KernelFunction', 'rbf');
     end
 end
