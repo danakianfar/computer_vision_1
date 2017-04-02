@@ -73,16 +73,16 @@ function [images, labels] = getSimpleNNBatch(imdb, batch)
     images = imdb.images.data(:,:,:,batch) ;
     labels = imdb.images.labels(1,batch) ;
     
-    H = fspecial('gaussian');
+    %H = fspecial('gaussian');
     
     % Flip in left/right direction
     if rand < 0.3
         images=fliplr(images);
     % Apply random rotation
-    elseif rand < 0.5        
-        images = imrotate(images ,(0.5-rand)*30);
-    elseif rand < 0.7
-        images = imfilter(images,H,'replicate', 'same');
+    %elseif rand < 0.5        
+    %    images = imrotate(images ,(0.5-rand)*30);
+    %elseif rand < 0.7
+    %    images = imfilter(images,H,'replicate', 'same');
     end
     
 end

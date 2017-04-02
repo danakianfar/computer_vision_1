@@ -10,24 +10,57 @@ addpath('C:\Users\Dana\.src\liblinear-2.1\matlab\')
 addpath('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab')
 run('C:\Users\Dana\.src\matconvnet-1.0-beta23\matlab\vl_setupnn')
 % vl_compilenn('enableGpu', true, 'cudaRoot', 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0', 'cudaMethod', 'nvcc', 'enableCudnn', true, 'cudnnRoot', 'local/cudnn-rc4') ;
+
+%% Setup Ubuntu
+
+run('../../../../vlfeat/toolbox/vl_setup')
+run('../../../../matconvnet/matlab/vl_setupnn')
+addpath('../../../../matconvnet/matlab')
+addpath('../../../../liblinear-2.1/matlab/')
+
+
 %% fine-tune cnn
 
 [net, info, expdir] = finetune_cnn();
 
 %% extract features and train svm
 
+clear, clc
+expdir = 'data/cnn_assignment-lenet';
 
-nets.fine_tuned = load(fullfile(expdir, 'net-epoch-34.mat')); nets.fine_tuned = nets.fine_tuned.net;
-nets.pre_trained = load(fullfile('data', 'pre_trained_model.mat')); nets.pre_trained = nets.pre_trained.net; 
-data = load(fullfile(expdir, 'imdb-caltech.mat'));
+res_cell = {};
+ix = 1;
 
+for bs = 50:50:100
+    for ep = 40:40:120
+        nets.fine_tuned = load(fullfile(expdir, strcat('b',num2str(bs),'_e', num2str(ep),'.mat'))); 
+        nets.fine_tuned = nets.fine_tuned.net;
+        nets.pre_trained = load(fullfile('data', 'pre_trained_model.mat')); 
+        nets.pre_trained = nets.pre_trained.net; 
+        data = load(fullfile(expdir, 'imdb-caltech.mat'));
+        res_cell{ix} = train_svm(nets, data);
+        ix = ix+1;
+    end
+end
 
 %%
-train_svm(nets, data);
 
+clc
+
+ix = 1;
+for bs = 50:50:100
+    for ep = 40:40:120
+        disp('CNN: fine_tuned_accuracy   SVM: pre_trained_accuracy:  Fine_tuned_accuracy:')
+        disp(strcat('b',num2str(bs),'_e', num2str(ep)))
+        res_cell{ix}
+        ix = ix+1;
+    end
+end
 
 %%
 %net = load(fullfile('data', 'imagenet-vgg-verydeep-16.mat'));
+
+clear, clc
 
 net = load(fullfile('data', 'imagenet-matconvnet-alex.mat'));
 
@@ -37,8 +70,9 @@ net = load(fullfile('data', 'imagenet-matconvnet-alex.mat'));
 im = imread('../Caltech4/ImageData/faces_train/img011.jpg') ;
 im_ = single(im) ; % note: 255 range
 im_ = imresize(im_, net.meta.normalization.imageSize(1:2)) ;
-im_ = im_ - net.meta.normalization.averageImage ;
+im_ = im_ - net.meta.normalization.averageImage' ;
 
+%%
 % run the CNN
 res = vl_simplenn(net, im_) ;
 

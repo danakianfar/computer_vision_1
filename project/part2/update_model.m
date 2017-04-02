@@ -13,11 +13,12 @@ function net = update_model(varargin)
     net.meta.inputSize = [32 32 3] ;
     net.meta.trainOpts.learningRate = [ 0.05*ones(1,20) ...
                                         0.005*ones(1,20)...
-                                        0.0005*ones(1,10)...
+                                        0.0005*ones(1,80)...
                                         ] ;
     net.meta.trainOpts.weightDecay = 0.0001 ;
-    net.meta.trainOpts.batchSize = 100 ;
-    net.meta.trainOpts.numEpochs = numel(net.meta.trainOpts.learningRate) ;
+    net.meta.trainOpts.batchSize = 50;
+    net.meta.trainOpts.numEpochs = 120;
+    %numel(net.meta.trainOpts.learningRate) ;
 
     % Define network 
     net.layers = {} ;
