@@ -26,7 +26,8 @@ function new_idx = find_closest_visual_word(points, model, show_plot)
     % Switch depending on the provided model type
     switch model.name
         case 'kmeans'
-            new_idx = knnsearch(double(model.centroids'), double(points));
+%             new_idx = knnsearch(double(model.centroids'), double(points));
+            new_idx = vl_ikmeanspush(points', model.centroids)';
         case 'gmm'
             new_idx = cluster(model.model,points);
         otherwise

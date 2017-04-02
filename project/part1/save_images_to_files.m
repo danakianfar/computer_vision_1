@@ -7,7 +7,7 @@ function save_images_to_files(paths, labels, is_training_set)
     testing_path = './data/testing';
     dataset = {'classification','clustering'};
     
-    for i=1:length(paths)
+    parfor i=1:length(paths)
         if mod(i,200) == 0
            disp(compose('%d/%d images processed.', i, length(paths))) 
         end
