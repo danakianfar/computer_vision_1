@@ -22,10 +22,9 @@ function [net, info, expdir] = finetune_cnn(varargin)
         opts.train.gpus = []; 
     end
 
-    opts.train.gpus = [1];  
-    opts.cudnn = true ;
+    %opts.train.gpus = [1];  
+    %opts.cudnn = true ;
     opts.nesterovUpdate = true ;
-    opts.numEpochs = 200;
     
 %     opts.errorFunction = 'multiclass';
 
@@ -73,7 +72,19 @@ function [images, labels] = getSimpleNNBatch(imdb, batch)
 % -------------------------------------------------------------------------
     images = imdb.images.data(:,:,:,batch) ;
     labels = imdb.images.labels(1,batch) ;
-    if rand > 0.5, images=fliplr(images) ; end
+    
+    H = fspecial('gaussian');
+    
+    % Flip in left/right direction
+    if rand < 0.3
+        images=fliplr(images);
+    % Apply random rotation
+    elseif rand < 0.5        
+        images = imrotate(images ,(0.5-rand)*30);
+    elseif rand < 0.7
+        images = imfilter(images,H,'replicate', 'same');
+    end
+    
 end
 
 % -------------------------------------------------------------------------
@@ -166,13 +177,11 @@ function imdb = getCaltechIMDB()
     data = bsxfun(@minus, imdb.images.data, dataMean);
 
     imdb.images.data = data;
-%     imdb.images.labels = labels ;
-%     imdb.images.set = sets;
     imdb.meta.sets = {'train', 'val'} ;
     imdb.meta.classes = classes;
 
     perm = randperm(numel(imdb.images.labels));
-    imdb.images.data = single(imdb.images.data(:,:,:, perm));
-    imdb.images.labels = single(imdb.images.labels(perm));
+    imdb.images.data = single(imdb.images.data(:,:,:, perm)/255);
+    imdb.images.labels = single(floor(imdb.images.labels(perm)));
     imdb.images.set = single(imdb.images.set(perm));
 end
