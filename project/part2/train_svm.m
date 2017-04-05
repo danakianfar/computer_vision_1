@@ -15,7 +15,7 @@ function res = train_svm(nets, data)
 
     fprintf('\n\n\n');
 
-    fprintf('CNN: fine_tuned_accuracy: %0.3f\nSVM: pre_trained_accuracy: %0.3f \nFine_tuned_accuracy: %0.3f\n', 100*nn.accuracy, svm.pre_trained.accuracy(1), svm.fine_tuned.accuracy(1));
+    fprintf('CNN: Fine_tuned_accuracy: %0.3f\nSVM: Pre_trained_accuracy: %0.3f \nSVM: Fine_tuned_accuracy: %0.3f\n', 100*nn.accuracy, svm.pre_trained.accuracy(1), svm.fine_tuned.accuracy(1));
     
     res = [100*nn.accuracy, svm.pre_trained.accuracy(1), svm.fine_tuned.accuracy(1)];
 
@@ -49,32 +49,3 @@ function [predictions, accuracy] = get_predictions(data)
 
 end
 
-function [trainset, testset] = get_svm_data(data, net)
-
-    trainset.labels = [];
-    trainset.features = [];
-
-    testset.labels = [];
-    testset.features = [];
-    for i = 1:size(data.images.data, 4)
-
-        res = vl_simplenn(net, data.images.data(:, :,:, i));
-        feat = res(end-3).x; feat = squeeze(feat);
-
-        if(data.images.set(i) == 1)
-            trainset.features = [trainset.features feat];
-            trainset.labels   = [trainset.labels;  data.images.labels(i)];
-        else
-            testset.features = [testset.features feat];
-            testset.labels   = [testset.labels;  data.images.labels(i)];
-        end
-
-    end
-
-    trainset.labels = double(trainset.labels);
-    trainset.features = sparse(double(trainset.features'));
-
-    testset.labels = double(testset.labels);
-    testset.features = sparse(double(testset.features'));
-
-end

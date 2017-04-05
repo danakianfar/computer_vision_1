@@ -69,7 +69,9 @@ function net = update_model(varargin)
                                'stride', 1, ...
                                'pad', 0) ;
     net.layers{end+1} = struct('type', 'relu') ;
-
+    
+    net.layers{end+1} = struct('type', 'dropout') ;
+    
     % Block 5
     NEW_INPUT_SIZE  = 64; % output of block 4
     NEW_OUTPUT_SIZE = 4; % 4 classes
