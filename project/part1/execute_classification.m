@@ -18,7 +18,8 @@ function [model] = execute_classification(bow_features, targets, classifier)
 
     switch(classifier)
         case 'liblinear'
-            model = train(targets, sparse(bow_features));
+            C = train(targets, sparse(bow_features) ,'-C -s 0');
+            model = train(targets, sparse(bow_features) , sprintf('-c %f -s 0', C(1)));
         case 'libsvm-poly'
             model = fitcsvm(bow_features, targets, 'KernelFunction', 'polynomial');
         case 'libsvm-rbf'

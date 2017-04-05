@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <title>Image list prediction</title>
+      <style type="text/css">
+         img {
+         width:200px;
+         }
+      </style>
+   </head>
+   <body>
+      <h2>Dana Kianfar 11391014, Jose Gallego Posada 11390689</h2>
+      <h1>Settings</h1>
+      <table>
+         <tr>
+            <th>SIFT step size</th>
+            <td>%SIFT_STEP% px</td>
+         </tr>
+         <tr>
+            <th>SIFT block sizes</th>
+            <td>%SIFT_BLOCK% pixels</td>
+         </tr>
+         <tr>
+            <th>SIFT method</th>
+            <td>%SIFT_METHOD%-SIFT</td>
+         </tr>
+         <tr>
+            <th>Vocabulary size</th>
+            <td>%VOCAB_SIZE% words</td>
+         </tr>
+         <tr>
+            <th>Vocabulary fraction</th>
+            <td>%VOCAB_FRAC%</td>
+         </tr>
+         <tr>
+            <th>SVM training data</th>
+            <td>%SVM_POS% positive, %SVM_NEG% negative per class</td>
+         </tr>
+         <tr>
+            <th>SVM kernel type</th>
+            <td>%SVM_KERNEL%</td>
+         </tr>
+      </table>
+      <h1>Prediction lists (MAP: %MAP%)</h1>
+      <table>
+         <thead>
+            <tr>
+               <th>Airplanes (AP: %AIRPLANE_MAP%)</th>
+               <th>Cars (AP: %CAR_MAP%)</th>
+               <th>Faces (AP: %FACE_MAP%)</th>
+               <th>Motorbikes (AP: %MOTORBIKE_MAP%)</th>
+            </tr>
+         </thead>
+         <tbody>
+            %RESULTS%
+         </tbody>
+      </table>
+   </body>
+</html>

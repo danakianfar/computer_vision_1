@@ -35,6 +35,8 @@ function save_images_to_files(paths, labels, is_training_set)
        [dense_desc, key_desc] = extract_descriptors(im_data);
        image.dense = dense_desc;
        image.key = key_desc;
+       
+       image.hog = vl_hog(im2single(im_data), 35);
 
        % Save
        if is_training_set

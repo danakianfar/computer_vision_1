@@ -1,4 +1,4 @@
-function [ map ] = scores2map( scores, labels, target_class)
+function [ map, I ] = scores2map( scores, labels, target_class)
 %SCORES2MAP Calculates MAP given the scores of the images from a particular
 %binary classifier
 %
@@ -13,7 +13,7 @@ function [ map ] = scores2map( scores, labels, target_class)
     % Join scores and labels and sort them on ascending negatives (=
     % descending) scores
     A = [ -scores labels];
-    sorted_A = sortrows(A, 1);
+    [sorted_A, I]= sortrows(A, 1);
      
     % Get the sorted labels and check if they are the relevant label
     ranking = (sorted_A(:,2) == target_class);
